@@ -1,0 +1,107 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;//Para a imagem
+
+//P.S. Os nomes de variaveis e metodos podem estar confusos> estao misturados termos em pt-br e eng.
+public class StoreViewpoints : MonoBehaviour
+{
+    public bool EmExecucao = true;
+    public float tempoParaUpdate;
+    public GameObject efeitoHeatmap;
+    public GameObject objetoPai;
+
+    private Camera cam;
+
+    [SerializeField]
+    private RaycastHit pontoAtual, pontoAnterior;
+    private bool ativacaoHeatmap = false;
+   
+    
+    //Armazenando pontos em uma lista privada.
+    private List<RaycastHit> pontos = new List<RaycastHit>();
+    //Armazenando uma lista de objetos de heatmap
+	private List<GameObject> objetosHeatmap = new List<GameObject>();
+
+
+
+    // Update é chamado a cada frame, mas se respeita o tempo para execucao
+    void Update()
+    {
+        if (EmExecucao)
+        {
+            StartCoroutine(storePoints());
+        }
+
+        //Tecla H para ativar/desativar a visualizacao do heatmap
+        if (Input.GetKeyDown(KeyCode.H)) {
+            //Alterna o estado de ativacao com o pressionar da tecla
+            ativacaoHeatmap = !ativacaoHeatmap; 
+            //Caso desejado, chama o metodo de impressao do heatmap
+            if (ativacaoHeatmap) { imprimirHeatmap(); }
+			else{apagarHeatmap();}
+        }
+        //Pode ser criado metodo especifico para imprimir novas entradas diretamente caso ativacaoHeatmap=true;
+    }
+
+    public IEnumerator storePoints()
+    {
+        EmExecucao = false;//paralisa o update e continua o processo ao longo dos frames
+        Debug.Log("Entrou em execucao");
+        yield return new WaitForSecondsRealtime(tempoParaUpdate);//Espera um periodo predeterminado para executar novamente a captura
+        Debug.Log("deve ter esperado o tempo até update");
+
+        //Escolha da camera
+        cam = Camera.main;//Camera prinicipal da cena
+
+        //Captura do ponto de visao projetado no mundo
+        pontoAtual = capturaPonto(cam);
+
+        if (pontoAnterior.point == pontoAtual.point){}//RaycastHit.ReferenceEquals(pontoAnterior,pontoAtual)) { }
+        else//se existir ponto ele sera armazenado
+        {
+            Debug.Log("Ponto atual: "+pontoAtual.point);
+            Debug.Log("Ponto anterior: " + pontoAnterior.point);
+            storePoint(pontoAtual);
+			pontoAnterior = pontoAtual;
+        }
+        EmExecucao = true;//Volta a ativacao pela rotina de update
+    }
+
+
+    private RaycastHit capturaPonto(Camera cam)
+    {
+        Ray raio = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        Vector3 pontoVistoPelaCamera = cam.ScreenToWorldPoint(new Vector3(cam.scaledPixelWidth / 2, cam.scaledPixelHeight / 2, cam.nearClipPlane));
+        RaycastHit pontoNoMundo;
+        if (Physics.Raycast(raio, out pontoNoMundo, 100.0f))
+        {
+            return pontoNoMundo;
+        }
+
+        return pontoAnterior;
+    }
+
+    private void storePoint(RaycastHit point)
+    {
+        pontos.Add(point);
+    }
+
+    private void imprimirHeatmap()
+    {
+        //Inicialmente so' imprime os pontos armazenados, sem considerar proximidade e temperatura
+        foreach(RaycastHit ponto in pontos){
+            objetosHeatmap.Add( Instantiate(efeitoHeatmap, ponto.point, Quaternion.LookRotation(ponto.point), objetoPai.transform)  );//Rotacao esta errada para paredes e em colisao com todas as superficies(puxar um pouco pra "frente")
+        }//Para garantir, na maior parte das vezes, que a textura esta acima dos outros objetos  podemos tentar aproxima-la da camera por uma pequena distancia
+
+    }
+	
+	private void apagarHeatmap()
+	{
+		foreach(GameObject objeto in objetosHeatmap){
+            GameObject.Destroy(objeto);
+        }
+	
+	}
+}
+
