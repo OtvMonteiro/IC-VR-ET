@@ -151,9 +151,9 @@
     <None Include="Assets\heatmaps(AllanZ)\Heatmap.shader" />
     <None Include="Assets\TobiiXR\External\readme.txt" />
     <None Include="Assets\ViveSR\Shaders\DartBoardShader.shader" />
-    <None Include="Assets\Scripts\StoreViewpoints - DRAFT-Canvas.txt" />
+    <None Include="Assets\Scripts\[DEPRECATED]StoreViewpoints - DRAFT-Canvas.txt" />
     <None Include="Assets\TobiiXR\readme.txt" />
-    <None Include="Assets\Scripts\StoreViewpoints - DRAFT-PlaneSpawn.txt" />
+    <None Include="Assets\Scripts\[DEPRECATED]StoreViewpoints - DRAFT-PlaneSpawn.txt" />
     <None Include="Assets\TobiiXR\Examples\HandEyeCoordination_Example\Shaders\LICENSE.txt" />
     <None Include="Assets\TobiiXR\Examples\HandEyeCoordination_Example\Shaders\UltimateOutline.shader" />
     <None Include="Assets\TobiiXR\External\Providers\Vive\readme.txt" />
