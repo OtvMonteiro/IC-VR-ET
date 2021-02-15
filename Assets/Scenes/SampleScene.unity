@@ -5599,7 +5599,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: -3.59e-43, y: 0, z: 0, w: 2.3510604e-38}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -5689,22 +5689,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: 0
+      value: -3.7477316e-36
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: -1.6271975e+29
+      value: 953137.1
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 8.02e-43
+      value: -8.066828e+10
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: -1.6349981e+29
+      value: -3672147.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -6186,10 +6186,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EmExecucao: 1
+  updateEmTempoReal: 1
   tempoParaUpdate: 0.4
   efeitoHeatmap: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
     type: 3}
   objetoPai: {fileID: 2106381786}
+  ModoPlayer: 1
+  CaminhoDoArquivoDeReplay: C:\Users\Otv\Desktop\ET Gravacoes\heatmap__15_02_2021__12_17_45.txt
 --- !u!1 &2118871436
 GameObject:
   m_ObjectHideFlags: 0
