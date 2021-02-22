@@ -5599,7 +5599,8 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: -3.59e-43, y: 0, z: 0, w: 2.3510604e-38}
+  m_BoundingSphereOverride: {x: 0.000000001877595, y: 0.0000000037252903, z: -Infinity,
+    w: 4.1359028e-25}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -5689,22 +5690,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: -3.7477316e-36
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 953137.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: -8.066828e+10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: -3672147.8
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -6115,7 +6116,8 @@ GameObject:
   - component: {fileID: 2106381787}
   - component: {fileID: 2106381789}
   - component: {fileID: 2106381790}
-  m_Layer: 0
+  - component: {fileID: 2106381791}
+  m_Layer: 9
   m_Name: Heatmap DRAFT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6186,13 +6188,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EmExecucao: 1
-  updateEmTempoReal: 1
-  tempoParaUpdate: 0.4
+  updateEmTempoReal: 0
+  tempoParaUpdate: 0.2
   efeitoHeatmap: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
+    type: 3}
+  efeitoHeatmapLaranja: {fileID: 7775086429765991711, guid: c00c97d9935eff04497759ee16c6d6ff,
+    type: 3}
+  efeitoHeatmapVermelho: {fileID: 1734858818982088343, guid: cbc0688fbed94344abf6acbdf54f5895,
     type: 3}
   objetoPai: {fileID: 2106381786}
   ModoPlayer: 1
-  CaminhoDoArquivoDeReplay: C:\Users\Otv\Desktop\ET Gravacoes\heatmap__15_02_2021__12_17_45.txt
+  CaminhoDoArquivoDeReplay: C:\Users\Otv\Desktop\ET Gravacoes\heatmap__22_02_2021__14_59_48.txt
+--- !u!205 &2106381791
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106381786}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 0
 --- !u!1 &2118871436
 GameObject:
   m_ObjectHideFlags: 0

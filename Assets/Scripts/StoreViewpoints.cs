@@ -1,9 +1,7 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 
 //P.S. Os nomes de variaveis e metodos podem estar confusos> estao misturados termos em pt-br e eng.
 public class StoreViewpoints : MonoBehaviour
@@ -11,8 +9,8 @@ public class StoreViewpoints : MonoBehaviour
     public bool EmExecucao = true;
     public bool updateEmTempoReal;
     public float tempoParaUpdate;
-    public GameObject efeitoHeatmap;
-    public GameObject objetoPai;
+    public GameObject efeitoHeatmap, efeitoHeatmapLaranja, efeitoHeatmapVermelho;
+    public GameObject objetoPai; //Ha um jeito melhor de adquirir o objeto em que o script se encontra
 
     //Para visualizacao de gravacoes anteriores
     public bool ModoPlayer = false;
@@ -54,11 +52,21 @@ public class StoreViewpoints : MonoBehaviour
     // Update é chamado a cada frame, mas se respeita o tempo para execucao
     void Update()
     {
+        //Inicia em segundo plano a rotina de captura de pontos
         if (EmExecucao)
         {
             StartCoroutine(storePoints());
         }
-        else if (ModoPlayer && updateEmTempoReal) { replayTempoReal(); }//Para modo replay em tempo real
+        //Para modo replay em tempo real
+        else if (ModoPlayer && updateEmTempoReal)
+        {
+            if (indexPontos < pontos.Count)//Verifica se a contagem nao chegou ao fim
+            {
+                replayTempoReal();
+            }
+        }
+
+
 
         //Tecla H para ativar/desativar a visualizacao do heatmap
         if (Input.GetKeyDown(KeyCode.H))
@@ -93,9 +101,9 @@ public class StoreViewpoints : MonoBehaviour
     public IEnumerator storePoints()
     {
         EmExecucao = false;//paralisa o update e continua o processo ao longo dos frames
-        Debug.Log("Entrou em execucao");
+        //Debug.Log("Entrou em execucao");
         yield return new WaitForSecondsRealtime(tempoParaUpdate);//Espera um periodo predeterminado para executar novamente a captura
-        Debug.Log("deve ter esperado o tempo até update");
+        //Debug.Log("deve ter esperado o tempo até update");
 
         //Escolha da camera
         cam = Camera.main;//Camera prinicipal da cena
@@ -106,8 +114,9 @@ public class StoreViewpoints : MonoBehaviour
         if (pontoAnterior.point == pontoAtual.point) { }//RaycastHit.ReferenceEquals(pontoAnterior,pontoAtual)) { }
         else//se existir ponto ele sera armazenado
         {
-            Debug.Log("Ponto atual: " + pontoAtual.point);
-            Debug.Log("Ponto anterior: " + pontoAnterior.point);
+            //Debug.Log("Ponto atual: " + pontoAtual.point);
+            //Debug.Log("Ponto anterior: " + pontoAnterior.point);
+            
             //Armazena pontos em formato Vector3 para construir o heatmap
             pontos.Add(pontoAtual.point);
             pontoAnterior = pontoAtual;
@@ -115,7 +124,7 @@ public class StoreViewpoints : MonoBehaviour
             //Para impressao em tempo real ativa -codigo copiado de impressaoHeatmap()
             if (updateEmTempoReal)
             {
-                objetosHeatmap.Add(Instantiate(efeitoHeatmap, pontoAtual.point, Quaternion.identity, objetoPai.transform));
+                imprimirPontoIndividualmente(pontoAtual.point);
             }
             //Salvar://Lista de InfoperSecond para o ItemEntry do BinaryManager //Atualmente com as infos de EyeT zeradas
             infoHeatmap.Add(new InfoperSecond(Time.time, pontoAtual.point,
@@ -141,19 +150,53 @@ public class StoreViewpoints : MonoBehaviour
     }
 
 
-    private void imprimirHeatmap()
+    private void imprimirHeatmap()//Apaga o que esta impresso e imprime todos os pontos armazenados 
     {
         //Limpando os objetos ja impressos
         apagarHeatmap();
 
         //Inicialmente so' imprime os pontos armazenados, sem considerar proximidade e temperatura
         foreach (Vector3 ponto in pontos) {
-            //Lista de objetos e criacao 
-            objetosHeatmap.Add(Instantiate(efeitoHeatmap, ponto, Quaternion.identity, objetoPai.transform));
-
+            imprimirPontoIndividualmente(ponto);
         }
-
     }
+
+    private void imprimirPontoIndividualmente (Vector3 ponto)
+    {
+        //Partindo do ponto e de um raio de anaise escolhido busca-se quantas colisoes ocorrem para determinar a temperatura do heatmap
+        float raio = (float)(0.5*tempoParaUpdate); //Usa o tempo de update para adequar a proximidade relativa para a temperatura
+        int layer = LayerMask.GetMask("Heatmap").GetHashCode();
+        Collider[] hitColliders = new Collider[10];
+        int colisoes = Physics.OverlapSphereNonAlloc(ponto, raio, hitColliders, layer);//Só detecta objetos na camada "Heatmap"
+            //Debug.Log("Numero de colisoes detectadas proximo ao ponto: " + colisoes + "\n");
+        
+        //Escolher qual o efeito de heatmap para o numero de colisões encontradas no ponto
+        GameObject efeitoHeatmapEscolhido;
+        switch (colisoes)
+        {
+            case int n when (n >= 5 && n < 10):
+                efeitoHeatmapEscolhido = efeitoHeatmapLaranja;
+                break;
+            case int n when (n >= 10):
+                efeitoHeatmapEscolhido = efeitoHeatmapVermelho;
+                break;
+            default:
+                efeitoHeatmapEscolhido = efeitoHeatmap;
+                break;
+        }
+       
+        //Lista de objetos e criacao 
+        objetosHeatmap.Add(Instantiate(efeitoHeatmapEscolhido, ponto, Quaternion.identity, objetoPai.transform));
+    }
+
+
+
+    //Alternativamente, podemos somente imprimir um ponto padrao para todos sem logica extra:
+    private void imprimirPontoSimples(Vector3 ponto) {
+        objetosHeatmap.Add(Instantiate(efeitoHeatmap, ponto, Quaternion.identity, objetoPai.transform));
+    }
+
+
 
     private void apagarHeatmap()
     {
@@ -165,6 +208,8 @@ public class StoreViewpoints : MonoBehaviour
 
     }
 
+
+
     private void BinaryManagerSave()
     {
         //Inicialmente o nome esta como "nome" e os dados de EyeT estao zerados para testes (o construtor utilizado para isso é personalizado)
@@ -174,6 +219,7 @@ public class StoreViewpoints : MonoBehaviour
 
         BinaryManager.SaveInfo(user, endereco);
     }
+
 
 
     //Depreciado no momento, alternativamente seria para armazenar somente a lista de pontos do heatmap
@@ -217,6 +263,8 @@ public class StoreViewpoints : MonoBehaviour
 
     }
 
+
+
     private void replayTempoReal(){
         //Pega do arquivo o tempo e ponto que sera impresso no momento correto
         List<Vector3> auxPontos = pontos.GetRange(indexPontos, 1);
@@ -231,7 +279,7 @@ public class StoreViewpoints : MonoBehaviour
         if (tempoAtual <= Time.time)
         {
             //Imprime esse ponto
-            objetosHeatmap.Add(Instantiate(efeitoHeatmap, pontoAtual, Quaternion.identity, objetoPai.transform));
+            imprimirPontoIndividualmente(pontoAtual);
 
             //Atualiza index para proximo ponto
             indexPontos++;
