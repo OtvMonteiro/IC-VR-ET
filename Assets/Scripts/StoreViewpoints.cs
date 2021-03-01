@@ -26,16 +26,16 @@ public class StoreViewpoints : MonoBehaviour
 
 
     //Armazenando pontos em uma lista privada.
-    private List<Vector3> pontos = new List<Vector3>();
+    protected List<Vector3> pontos = new List<Vector3>();
     //Armazenando uma lista de objetos de heatmap
-    private List<GameObject> objetosHeatmap = new List<GameObject>();
+    protected List<GameObject> objetosHeatmap = new List<GameObject>();
 
     //Usando o BinaryManager para guardar os dados
     private ItemEntry user;
     private List<InfoperSecond> infoHeatmap = new List<InfoperSecond>();
-    private List<float> tempos = new List<float>();//Para sincronizar tempo do player com o arquivo de replay
+    protected List<float> tempos = new List<float>();//Para sincronizar tempo do player com o arquivo de replay
     //Auxiliares para replay
-    private int indexPontos=0 , indexTempos=0;
+    protected int indexPontos=0 , indexTempos=0;
 
     private void Start()
     {
@@ -159,10 +159,13 @@ public class StoreViewpoints : MonoBehaviour
         foreach (Vector3 ponto in pontos) {
             imprimirPontoIndividualmente(ponto);
         }
+       
     }
 
-    private void imprimirPontoIndividualmente (Vector3 ponto)
+    protected void imprimirPontoIndividualmente (Vector3 ponto)
     {
+        if (Vector3.Equals(ponto, Vector3.zero)) { return; }//Nao deve imprimir o ponto nulo
+
         //Partindo do ponto e de um raio de anaise escolhido busca-se quantas colisoes ocorrem para determinar a temperatura do heatmap
         float raio = (float)(0.5*tempoParaUpdate); //Usa o tempo de update para adequar a proximidade relativa para a temperatura
         int layer = LayerMask.GetMask("Heatmap").GetHashCode();
@@ -187,13 +190,17 @@ public class StoreViewpoints : MonoBehaviour
        
         //Lista de objetos e criacao 
         objetosHeatmap.Add(Instantiate(efeitoHeatmapEscolhido, ponto, Quaternion.identity, objetoPai.transform));
+    
     }
 
 
 
     //Alternativamente, podemos somente imprimir um ponto padrao para todos sem logica extra:
     private void imprimirPontoSimples(Vector3 ponto) {
+        if(Vector3.Equals(ponto, Vector3.zero)) { return; }//Nao deve imprimir o ponto nulo
+        //Instancia 
         objetosHeatmap.Add(Instantiate(efeitoHeatmap, ponto, Quaternion.identity, objetoPai.transform));
+        
     }
 
 
@@ -265,7 +272,7 @@ public class StoreViewpoints : MonoBehaviour
 
 
 
-    private void replayTempoReal(){
+    protected void replayTempoReal(){
         //Pega do arquivo o tempo e ponto que sera impresso no momento correto
         List<Vector3> auxPontos = pontos.GetRange(indexPontos, 1);
         List<float>   auxTempos = tempos.GetRange(indexTempos, 1);

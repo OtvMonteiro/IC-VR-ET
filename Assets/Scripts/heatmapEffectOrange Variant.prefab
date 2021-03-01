@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: heatmapEffectOrange Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2678476836059319956, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -87,5 +92,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 424e82f9aaa7654428d31bd8e440ac82, type: 2}
+    - target: {fileID: 8642179241020598065, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37bb5623bdb8d1e47923e4741eb50b8a, type: 3}

@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\heatmaps(AllanZ)\Heatmap.cs" />
+    <Compile Include="Assets\replayHeatmap.cs" />
     <Compile Include="Assets\Scripts\BinaryManager.cs" />
     <Compile Include="Assets\Scripts\HeatmapSO.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />

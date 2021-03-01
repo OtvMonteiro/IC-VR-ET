@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeatmapEffectRed
       objectReference: {fileID: 0}
+    - target: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2678476836059319956, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
         type: 3}
       propertyPath: m_LocalPosition.x
