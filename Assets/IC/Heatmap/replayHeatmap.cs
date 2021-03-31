@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Globalization;
 
 
 public class replayHeatmap : StoreViewpoints
@@ -48,19 +49,26 @@ public class replayHeatmap : StoreViewpoints
         //Começa a ler os valores
         while (sr.Peek()!=-1) {
 
-            //Adiciona o tempo 'a lista de tempos
-            tempos.Add((float)sr.Read());
+            string[] valoresString = sr.ReadLine().Split(';');
+            List<float> listaValores = new List<float>();
 
-            //Descarta 7
-            for (int n = 0; n <= 7; n++) {sr.Read();}
+            foreach(string valor in valoresString)
+            {
+                listaValores.Add(float.Parse(valor, new CultureInfo("pt-BR", false).NumberFormat));
+            }
+
+            float[] valores = listaValores.ToArray();
+
+            //Adiciona o tempo 'a lista de tempos
+            tempos.Add(valores[0]);
 
             //Aquisição dos dados de ET
-            Vector3 posicaoOlhosCombinada = new Vector3((float)sr.Read(), (float)sr.Read(), (float)sr.Read());
-            Vector3 direcaoOlhosCombinada = new Vector3((float)sr.Read(), (float)sr.Read(), (float)sr.Read());
+            Vector3 posicaoOlhosCombinada = new Vector3(valores[8], valores[9], valores[10]);
+            Vector3 direcaoOlhosCombinada = new Vector3(valores[11], valores[12], valores[13]);
             //Transformar os dados capturados em um ponto no mundo
             Vector3 pontoHeatmap = encontrarPontoNoMundo(posicaoOlhosCombinada, direcaoOlhosCombinada);
             pontos.Add(pontoHeatmap);
-            Debug.Log("Armazenado o ponto:  " + pontoHeatmap.x + ";" + pontoHeatmap.y + ";" + pontoHeatmap.z + ";\n");
+            //Debug.Log("Armazenado o ponto:  " + pontoHeatmap.x + ";" + pontoHeatmap.y + ";" + pontoHeatmap.z + ";\n");
 
             //imprimirPontoIndividualmente(pontoHeatmap);//Imprime todos os pontos no começo da execucao
 
