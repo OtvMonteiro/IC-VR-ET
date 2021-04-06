@@ -9,19 +9,32 @@ using Tobii.XR;
 //P.S. Os nomes de variaveis e metodos podem estar confusos> estao misturados termos em pt-br e eng.
 public class StoreViewpoints : MonoBehaviour
 {
+    
     public bool EmExecucao = true;
+    public bool showHeatmap = false;
     public bool updateEmTempoReal;
     public bool somenteRastro;
     public int tamanhoDoRastro=10;
     public float tempoParaUpdate;
     public float escalaRelativaDosPontos = 1;
-    public GameObject efeitoHeatmap, efeitoHeatmapLaranja, efeitoHeatmapVermelho;
-    public GameObject collider;
-    public GameObject objetoPai; //Ha um jeito melhor de adquirir o objeto em que o script se encontra
-
+    //Prefabs, podem ser privados, encontrando-os em Start()
+    public GameObject efeitoHeatmap, efeitoHeatmapLaranja, efeitoHeatmapVermelho; 
+    public GameObject colisor;
+    //Salvar o Heatmap
+    public bool salvarHeatmap = false;
     //Para visualizacao de gravacoes anteriores
-    public bool ModoPlayer = false;
+    public bool ModoPlayer;
     public string CaminhoDoArquivoDeReplay;
+
+
+    //Controle de parametros
+    private bool EmExecucao_background = true;
+    private bool ModoPlayer_anterior = false;
+    private GameObject objetoPai;
+    private bool _ultimoShowHeatmap, _ultimoSalvarHeatmap;
+    public Color[] corNova = new Color[3];//Verificar como o parametro aparece para o usuário
+    public float opacidade;
+
 
     //Camera principal ou HMD
     private bool HMD = false;
@@ -29,21 +42,25 @@ public class StoreViewpoints : MonoBehaviour
 
     [SerializeField]
     private RaycastHit pontoAtual, pontoAnterior;
-    private bool ativacaoHeatmap = false;
+    
 
-    //Variaveis para a mudanca de escala do pontos
-    private GameObject e_H_novo, e_H_L_novo, e_H_V_novo ; //efeito_Heatmap_novo
+    //Variaveis para a personalizacao dos pontos (escala, cor, opacidade) 
+    private GameObject[] e_H_novo = new GameObject[3]; //efeito_Heatmap_novo
     private float escalaRelativaDosPontos_anterior = 1;
-    private Vector3 escalaOriginal1, escalaOriginal2, escalaOriginal3;
+    private Vector3[] escalaOriginal = new Vector3[3];
+    private Renderer[] _renderer = new Renderer[3];
+    private Color[] corOriginal = new Color[3];
+    private Color[] corAnterior = new Color[3];
+    private float opacidadeOriginal, opacidadeAnterior;
 
 
-    //Armazenando pontos em uma lista privada.
+
+    //Armazenando ObjetoParent, listas de pontos e seus objetos e uma fila para o rastro.
     protected List<Vector3> pontos = new List<Vector3>();
-    //Armazenando uma lista de objetos de heatmap
     protected List<GameObject> objetosHeatmap = new List<GameObject>();
     //protected List<GameObject> colliders = new List<GameObject>(); //Para encontrar objetos que foram destruidos por pouca utilidade
-    //Fila para armazenar os objetos para criar um rastro
     protected Queue<GameObject> rastro = new Queue<GameObject>();
+
 
     //Usando o BinaryManager para guardar os dados
     private ItemEntry user;
@@ -52,26 +69,45 @@ public class StoreViewpoints : MonoBehaviour
     //Auxiliares para replay
     protected int indexPontos=0 , indexTempos=0;
 
+
+
     private void Start()
     {
-        //efeitoHeatmap = GameObject.CreatePrimitive(PrimitiveType.Sphere);//para objeto privado
-
-        //Para modo de replay -> Lê o arquivo e faz aquisicao dos dados salvos
-        if (ModoPlayer) {
-            EmExecucao = false;
-            Debug.Log("Modo Player ativo - Novas entradas de Heatmap não são aceitas, construido a partir do arquivo fornecido");
-            playerHeatmapArquivo();
-        }
-
-
+        objetoPai = gameObject; //Associa o objeto que contem o script
+           //TO DO 
         //Criando objetos de heatmap modificaveis no contexto (pode entrara em desuso, caso não se modifique muito e armazenando os valores originais como na escala)
-        e_H_novo = efeitoHeatmap; //.gameObject parece ser diferente
-        e_H_L_novo = efeitoHeatmapLaranja;
-        e_H_V_novo = efeitoHeatmapVermelho;
+        //e_H_novo = GameObject.Find("efeitoHeatmap");
+        //GameObject.Instantiate(e_H_novo,new Vector3(1,1,1), Quaternion.identity);Debug.Log("INSTANCIADO EM 1,1,1");
+        e_H_novo[0] = GameObject.Instantiate(efeitoHeatmap        ,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
+        e_H_novo[1] = GameObject.Instantiate(efeitoHeatmapLaranja ,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
+        e_H_novo[2] = GameObject.Instantiate(efeitoHeatmapVermelho,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
+        // GameObject.Instantiate(new GameObject("e_H_novo1"),Vector3.zero, Quaternion.identity, objetoPai.transform);
+        // GameObject.Instantiate(new GameObject("e_H_novo2"),Vector3.zero, Quaternion.identity, objetoPai.transform);
+        // e_H_novo[0] = new GameObject("e_H_novo", efeitoHeatmap.GetComponents(Collider)) ;
+        // GameObject.Instantiate(e_H_novo[0],Vector3.zero, Quaternion.identity, objetoPai.transform);
+        // e_H_novo[0] = GameObject.Find("e_H_novo0");
+        //e_H_novo[0] = efeitoHeatmap.gameObject; //.gameObject parece ser diferente
+        //e_H_novo[1] = efeitoHeatmapLaranja;
+        //e_H_novo[2] = efeitoHeatmapVermelho;
+        //UnityEditor.PrefabUtility.Get
+       
+        //Escala (testar for loop)
+        escalaOriginal[0] = efeitoHeatmap.transform.localScale;
+        escalaOriginal[1] = efeitoHeatmapLaranja.transform.localScale;
+        escalaOriginal[2] = efeitoHeatmapVermelho.transform.localScale;
 
-        escalaOriginal1 = efeitoHeatmap.transform.localScale;
-        escalaOriginal2 = efeitoHeatmapLaranja.transform.localScale;
-        escalaOriginal3 = efeitoHeatmapVermelho.transform.localScale;
+        //Cor e opacidade do Heatmap (tres tipos)
+        for(int n=0; n<3; n++)
+        {
+            _renderer[n] = e_H_novo[n].GetComponent<Renderer>(); //Só pega o verde por enquanto //
+            corOriginal[n] = _renderer[n].sharedMaterial.color;
+            corAnterior[n] = corOriginal[n];
+        }
+        //Descobrir como saber se houve entradas
+        if(true){corNova=corOriginal;}//Parametros de cor não especificados, assumimos o original
+        
+        opacidadeOriginal = opacidadeAnterior = corOriginal[0].a;
+
 
         //Checando se o HMD esta funcionando corretamente e se pode ser usado
         if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
@@ -83,44 +119,76 @@ public class StoreViewpoints : MonoBehaviour
 
     }
 
+
     // Update é chamado a cada frame, mas se respeita o tempo para execucao
     void Update()
     {
         //Inicia em segundo plano a rotina de captura de pontos
-        if (EmExecucao)
+        if (EmExecucao && EmExecucao_background)
         {
             StartCoroutine(storePoints());
         }
         //Para modo replay em tempo real
-        else if (ModoPlayer && updateEmTempoReal)
+        else if (ModoPlayer!=ModoPlayer_anterior && ModoPlayer==true)
         {
-            if (indexPontos < pontos.Count)//Verifica se a contagem nao chegou ao fim
+            EmExecucao = EmExecucao_background = false;
+            Debug.Log("Modo Player ativo - Novas entradas de Heatmap não são aceitas,"
+                                        +" construido a partir do arquivo fornecido");
+            
+            //Constroi listas de pontos e tempos
+            playerHeatmapArquivo();
+
+            //Para modo de replay -> Lê o arquivo e faz aquisicao dos dados salvos
+            if(updateEmTempoReal) //Em tempo real
             {
-                replayTempoReal();
+                if (indexPontos < pontos.Count)//Verifica se a contagem nao chegou ao fim
+                {
+                     //Só imprime quando não é em tempo real
+                      StartCoroutine(replayTempoReal());
+                }else StopCoroutine(replayTempoReal());    
             }
+            else{   //Constroi inteiro do arquivo
+                    imprimirHeatmap();
+                }
+            
         }
+        ModoPlayer_anterior = ModoPlayer; //Garantindo a detecção de mudanças, que ativa o replay quando ModoPlayer = true
+            
 
 
-
-        //Tecla H para ativar/desativar a visualizacao do heatmap
-        if (Input.GetKeyDown(KeyCode.H))
+        
+        //Ativar/desativar a visualizacao do heatmap
+        if (_ultimoShowHeatmap!=showHeatmap)
         {
-            //Alterna o estado de ativacao com o pressionar da tecla
-            ativacaoHeatmap = !ativacaoHeatmap;
+            _ultimoShowHeatmap=showHeatmap;
             //Caso desejado, chama o metodo de impressao do heatmap
-            if (ativacaoHeatmap) { imprimirHeatmap(); }
+            if (showHeatmap) { imprimirHeatmap(); }
             else { apagarHeatmap(); }
         }
-        //Pode ser criado metodo especifico para imprimir novas entradas diretamente caso ativacaoHeatmap=true;
-
-        //Metodo para salvar o arquivo imediatamente, pela tecla "j"
-        if (Input.GetKeyDown(KeyCode.J)) { gravarDadosCompletos(); Debug.Log("Pontos armazenados salvos"); }
-
-        //Se houver mudança de escala dos pontos de heatmap:
-        if (escalaRelativaDosPontos != escalaRelativaDosPontos_anterior) {
-            mudarEscala(escalaRelativaDosPontos);
-            escalaRelativaDosPontos_anterior = escalaRelativaDosPontos;
+        
+        //Metodo para salvar o arquivo imediatamente
+        if (_ultimoSalvarHeatmap!=salvarHeatmap)
+        {
+            _ultimoSalvarHeatmap=salvarHeatmap;
+            gravarDadosCompletos(); 
+            Debug.Log("Os pontos armazenados foram salvos"); 
         }
+
+        //Se houver mudança de escala dos pontos de heatmap: //Cor tambem pode ser implementada assim
+        if (escalaRelativaDosPontos_anterior != escalaRelativaDosPontos) 
+        {
+            escalaRelativaDosPontos_anterior = escalaRelativaDosPontos;
+            mudarEscala(escalaRelativaDosPontos);
+        }
+
+        //Se houver mudança de cor ou opacidade
+        if (opacidade!=opacidadeAnterior || !corNova.Equals(corAnterior))
+        {
+            opacidadeAnterior = opacidade;
+            corAnterior = corNova;
+            mudarCorEOpacidade();
+        }
+    
     }
 
     
@@ -143,9 +211,11 @@ public class StoreViewpoints : MonoBehaviour
     //Aquisição dos pontos de visao e armazenamento desses - com eventual impressao individual
     public IEnumerator storePoints()
     {
-        EmExecucao = false;//paralisa o update e continua o processo ao longo dos frames
+        EmExecucao_background = false;//paralisa o update e continua o processo ao longo dos frames
         //Debug.Log("Entrou em execucao");
-        yield return new WaitForSecondsRealtime(tempoParaUpdate);//Espera um periodo predeterminado para executar novamente a captura
+            //TO DO: dwell-time
+        //Espera um periodo predeterminado para executar novamente a captura
+        yield return new WaitForSecondsRealtime(tempoParaUpdate);
         //Debug.Log("deve ter esperado o tempo até update");
 
         //Escolha da camera
@@ -198,7 +268,7 @@ public class StoreViewpoints : MonoBehaviour
         }
 
 
-        EmExecucao = true;//Volta a ativacao pela rotina de update
+        EmExecucao_background = true;//Volta a ativacao pela rotina de update
     }
 
 
@@ -263,14 +333,14 @@ public class StoreViewpoints : MonoBehaviour
         switch (colisoes)
         {
             case int n when (n >= 5 && n < 12):
-                efeitoHeatmapEscolhido = e_H_L_novo;
+                efeitoHeatmapEscolhido = e_H_novo[1];
                 break;
             case int n when (n >= 12):
-                efeitoHeatmapEscolhido = e_H_V_novo;
+                efeitoHeatmapEscolhido = e_H_novo[2];
                 break;
             default:
                 //efeitoHeatmapEscolhido = efeitoHeatmap;
-                efeitoHeatmapEscolhido = e_H_novo;
+                efeitoHeatmapEscolhido = e_H_novo[0];
                 break;
         }
        
@@ -287,7 +357,7 @@ public class StoreViewpoints : MonoBehaviour
         {
             GameObject objeto = hitColliders[0].gameObject;
             //Cria uma colisao no lugar do ponto
-            objetosHeatmap.Add(Instantiate(collider, objeto.transform.position, Quaternion.identity, objetoPai.transform));
+            objetosHeatmap.Add(Instantiate(colisor, objeto.transform.position, Quaternion.identity, objetoPai.transform));
             GameObject.Destroy(objeto);
 
         }
@@ -363,18 +433,24 @@ public class StoreViewpoints : MonoBehaviour
     private void playerHeatmapArquivo()
     {
         infoHeatmap = BinaryManager.LoadInfo(CaminhoDoArquivoDeReplay);
+
+        //Limpando as listas //TO DO: decidir se é uma boa salvas os pontos antes de apaga-los (ou em arquivo ou listas auxiliares)
+        pontos.Clear();
+        tempos.Clear();
+
         foreach (InfoperSecond informacao in infoHeatmap)
         {
             pontos.Add(informacao.heatmapPoint);
             tempos.Add(informacao.time);
         }
-        if (!updateEmTempoReal) { imprimirHeatmap(); }
+        //if (!updateEmTempoReal) { imprimirHeatmap(); }
 
     }
 
 
 
-    protected void replayTempoReal(){
+    protected IEnumerator replayTempoReal(){
+        //TO DO: Verificar se limpar o heatmap (apagar, deletar) resolve os erros com o modo mudando durante a execucao
         //Pega do arquivo o tempo e ponto que sera impresso no momento correto
         List<Vector3> auxPontos = pontos.GetRange(indexPontos, 1);
         List<float>   auxTempos = tempos.GetRange(indexTempos, 1);
@@ -395,17 +471,36 @@ public class StoreViewpoints : MonoBehaviour
             indexTempos++;
         }
 
-        return;
-               
+        yield return null;   
     }
 
 
     //Atualiza a escala dos objetos de ponto de heatmap de acordo com uma escala do usuario
     private void mudarEscala(float escalaRelativaDosPontos)
     {
-        e_H_novo.transform.localScale   = escalaOriginal1 * escalaRelativaDosPontos;
-        e_H_L_novo.transform.localScale = escalaOriginal2 * escalaRelativaDosPontos;
-        e_H_V_novo.transform.localScale = escalaOriginal3 * escalaRelativaDosPontos;
+        for(int n=0; n<3; n++)
+        {
+            e_H_novo[n].transform.localScale   = escalaOriginal[n] * escalaRelativaDosPontos;
+        }
+    }
+
+    private void mudarCorEOpacidade()
+    {
+        //e_H_novo.GetComponent<Texture3D>().SetPixel();
+        //struct gradiente_alpha = objeto_opacidade.GetComponent<GradientAlphaKey>;
+        //corNova = corOriginal;//CUIDADO AQUI, dependendo de como for implementado
+        //A cor pode ser alterada por mudanças dos canais RGB, porem necessitariamos de 3tiposx3canais de opções de escolha
+        //corNova[0].ToString//Verificar se funciona com o parametro vazio e o que tem de saida aqui
+        Debug.Log("ENTROU PARA ALTERAR COR E OPACIDADE");
+
+        for(int n=0; n<3; n++)
+        {
+            //corNova.r = ;
+            corNova[n].a = opacidade;//Mudando o Alpha (Opacidade)
+            _renderer[n].sharedMaterial.SetColor("novaCor",corNova[n]);
+            //_renderer[n].material.SetColor("novaCor",corNova[n]);
+        }
+
     }
 
 

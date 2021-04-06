@@ -531,6 +531,7 @@ GameObject:
   - component: {fileID: 948662885}
   - component: {fileID: 948662884}
   - component: {fileID: 948662883}
+  - component: {fileID: 948662887}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -611,6 +612,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948662887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948662882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14840733f74ab842b3749280f65e19d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanciaMinima: 0
 --- !u!1001 &1089333401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -895,7 +909,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 1.83672e-40, w: 1.902843e+11}
+  m_BoundingSphereOverride: {x: 3.6e-43, y: NaN, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -985,22 +999,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: 0
+      value: -2.452666e+22
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 477
+      value: -4.7925706e+35
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 0
+      value: -1.0255375e-18
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: 486
+      value: 1.3441573e-15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -1509,6 +1523,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heatmap
       objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937349, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5824808816961937347, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1595,8 +1614,19 @@ PrefabInstance:
     - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
       propertyPath: somenteRastro
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
+      propertyPath: ModoPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
+      propertyPath: colisor
+      value: 
+      objectReference: {fileID: 1734858818982088343, guid: cd5c05fe321527346a21b0437fd8b49a,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc867dedd2580144d8a56621824ca7fc, type: 3}
 --- !u!1001 &8359575665510051479
@@ -1696,6 +1726,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VisaoPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 8509819280657123320, guid: cf2d6949a8a8e15419b3188c8d0039b5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8509819280657123316, guid: cf2d6949a8a8e15419b3188c8d0039b5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1749,6 +1784,11 @@ PrefabInstance:
     - target: {fileID: 8509819280657123316, guid: cf2d6949a8a8e15419b3188c8d0039b5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509819280657123317, guid: cf2d6949a8a8e15419b3188c8d0039b5,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
