@@ -70,6 +70,7 @@
     <Compile Include="Assets\IC\Outlining\Outliner.cs" />
     <Compile Include="Assets\IC\Outros\heatmaps(AllanZ)\Heatmap.cs" />
     <Compile Include="Assets\IC\Outros\heatmaps(AllanZ)\HeatmapSO.cs" />
+    <Compile Include="Assets\IC\Raio e Ponto de Visao\ETDataSample.cs" />
     <Compile Include="Assets\IC\Raio e Ponto de Visao\ViewRay - EyeT.cs" />
     <Compile Include="Assets\IC\Raio e Ponto de Visao\ViewRay.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />

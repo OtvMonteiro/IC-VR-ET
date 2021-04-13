@@ -258,6 +258,9 @@
     <Reference Include="UnityEditor.WebGL.Extensions">
       <HintPath>A:/Program Files (x86)/Unity/2019.4.17f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
     <Reference Include="Tobii.GameIntegration.Net">
       <HintPath>A:/Documents/GitHub/IC-ET-VR/Assets/Tobii/Plugins/Tobii.GameIntegration.Net.dll</HintPath>
     </Reference>
@@ -275,9 +278,6 @@
     </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/PackageCache/com.unity.render-pipelines.core@7.5.3/Editor/ShaderGenerator/ICSharpCode.NRefactory.dll</HintPath>
-    </Reference>
-    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
-      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>A:/Program Files (x86)/Unity/2019.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
