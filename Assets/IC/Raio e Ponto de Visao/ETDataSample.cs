@@ -7,7 +7,7 @@ namespace ViveSR.anipal.Eye
 public class ETDataSample : MonoBehaviour
 {
 
-
+    public float proporcaoRelativa = 1;
  //Variaveis para captura de dados de rastreamento ocular
     public int eyeCollisionLayer = 0;
 
@@ -20,7 +20,7 @@ public class ETDataSample : MonoBehaviour
 
  //Outras variaveis
     private GameObject sphere;//esferaAnterior, esferaAtual;
-    
+    private Vector3 proporcaoOriginal;
        
         
     private void Start()
@@ -34,6 +34,8 @@ public class ETDataSample : MonoBehaviour
 
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.name = "PosicaoDaVisao";
+        proporcaoOriginal = sphere.transform.localScale;
+        sphere.transform.localScale = proporcaoOriginal*proporcaoRelativa;
 
     }
 
@@ -48,6 +50,12 @@ public class ETDataSample : MonoBehaviour
             sphere.transform.position = FocusInfo.point;
         }
         
+        //Mudando proporcao
+        if(sphere.transform.localScale != proporcaoOriginal*proporcaoRelativa)
+        {
+            sphere.transform.localScale = proporcaoOriginal*proporcaoRelativa;
+        }
+
     }
 
         private void RunEyeData()
