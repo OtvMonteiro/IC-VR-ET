@@ -960,7 +960,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 8.273e-42, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 3.0122e-41, z: 0, w: -2.546875}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1050,22 +1050,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: 1.81e-43
+      value: 0.000000011920929
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: -1.3583829e+17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 4e-45
+      value: -0.10000002
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 2.485e-42
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -1886,8 +1886,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
+      propertyPath: distanciaMaxima
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
       propertyPath: escalaDosPontos
       value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
+      propertyPath: tempoParaUpdate
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
@@ -1969,7 +1979,7 @@ PrefabInstance:
     - target: {fileID: 5824808816961937349, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc867dedd2580144d8a56621824ca7fc, type: 3}

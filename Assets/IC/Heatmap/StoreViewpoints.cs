@@ -16,6 +16,7 @@ public class StoreViewpoints : MonoBehaviour
     public bool somenteRastro;
     public int tamanhoDoRastro=10;
     public float tempoParaUpdate;
+    public float distanciaMaxima = 0.7f;
     public float escalaRelativaDosPontos = 1;
     //Prefabs, podem ser privados, encontrando-os em Start()
     public GameObject efeitoHeatmap, efeitoHeatmapLaranja, efeitoHeatmapVermelho; 
@@ -33,6 +34,7 @@ public class StoreViewpoints : MonoBehaviour
     private GameObject objetoPai;
     private bool _ultimoShowHeatmap, _ultimoSalvarHeatmap;
     public Color[] corNova = new Color[3];//Verificar como o parametro aparece para o usuário
+    public bool aplicarCor = false;
     public float opacidade;
 
 
@@ -41,8 +43,8 @@ public class StoreViewpoints : MonoBehaviour
     private Camera cam;
 
     [SerializeField]
-    private RaycastHit pontoAtual, pontoAnterior;
-    
+    //private RaycastHit pontoAtual, pontoAnterior;
+    private Vector3 pontoAnterior = new Vector3(0,0,0);
 
     //Variaveis para a personalizacao dos pontos (escala, cor, opacidade) 
     private GameObject[] e_H_novo = new GameObject[3]; //efeito_Heatmap_novo
@@ -50,7 +52,7 @@ public class StoreViewpoints : MonoBehaviour
     private Vector3[] escalaOriginal = new Vector3[3];
     private Renderer[] _renderer = new Renderer[3];
     private Color[] corOriginal = new Color[3];
-    private Color[] corAnterior = new Color[3];
+    //private int[] hash_corOriginal = new int[3];
     private float opacidadeOriginal, opacidadeAnterior;
 
 
@@ -60,6 +62,8 @@ public class StoreViewpoints : MonoBehaviour
     protected List<GameObject> objetosHeatmap = new List<GameObject>();
     //protected List<GameObject> colliders = new List<GameObject>(); //Para encontrar objetos que foram destruidos por pouca utilidade
     protected Queue<GameObject> rastro = new Queue<GameObject>();
+    protected Vector3[] dwell_points = new Vector3[10];
+
 
 
     //Usando o BinaryManager para guardar os dados
@@ -74,40 +78,53 @@ public class StoreViewpoints : MonoBehaviour
     private void Start()
     {
         objetoPai = gameObject; //Associa o objeto que contem o script
-           //TO DO 
-        //Criando objetos de heatmap modificaveis no contexto (pode entrara em desuso, caso não se modifique muito e armazenando os valores originais como na escala)
-        //e_H_novo = GameObject.Find("efeitoHeatmap");
-        //GameObject.Instantiate(e_H_novo,new Vector3(1,1,1), Quaternion.identity);Debug.Log("INSTANCIADO EM 1,1,1");
-        e_H_novo[0] = GameObject.Instantiate(efeitoHeatmap        ,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
-        e_H_novo[1] = GameObject.Instantiate(efeitoHeatmapLaranja ,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
-        e_H_novo[2] = GameObject.Instantiate(efeitoHeatmapVermelho,Vector3.zero, Quaternion.identity, objetoPai.transform) as GameObject; 
-        // GameObject.Instantiate(new GameObject("e_H_novo1"),Vector3.zero, Quaternion.identity, objetoPai.transform);
-        // GameObject.Instantiate(new GameObject("e_H_novo2"),Vector3.zero, Quaternion.identity, objetoPai.transform);
-        // e_H_novo[0] = new GameObject("e_H_novo", efeitoHeatmap.GetComponents(Collider)) ;
-        // GameObject.Instantiate(e_H_novo[0],Vector3.zero, Quaternion.identity, objetoPai.transform);
-        // e_H_novo[0] = GameObject.Find("e_H_novo0");
-        //e_H_novo[0] = efeitoHeatmap.gameObject; //.gameObject parece ser diferente
-        //e_H_novo[1] = efeitoHeatmapLaranja;
-        //e_H_novo[2] = efeitoHeatmapVermelho;
-        //UnityEditor.PrefabUtility.Get
+        
+    //Criando objetos de heatmap modificaveis no contexto
+        //Vector3 pontoDistante = new Vector3(-100,-100,-100);
+        //Vector3 pontoDistante = Vector3.zero;
+        ////Cria um objeto base para outros
+        //e_H_novo[0] = efeitoHeatmap;
+        //Instantiate(efeitoHeatmap, pontoDistante,Quaternion.identity);
+
+        // e_H_novo[0] = GameObject.Instantiate(efeitoHeatmap        ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+        // e_H_novo[1] = GameObject.Instantiate(efeitoHeatmapLaranja ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+        // e_H_novo[2] = GameObject.Instantiate(efeitoHeatmapVermelho,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+        
+        //Não serve para alterar cor, mas não é necessario instanciar pontos visíveis no inicio
+        e_H_novo[0] = efeitoHeatmap; 
+        e_H_novo[1] = efeitoHeatmapLaranja;
+        e_H_novo[2] = efeitoHeatmapVermelho;
+        
        
         //Escala (testar for loop)
-        escalaOriginal[0] = efeitoHeatmap.transform.localScale;
-        escalaOriginal[1] = efeitoHeatmapLaranja.transform.localScale;
-        escalaOriginal[2] = efeitoHeatmapVermelho.transform.localScale;
+        // escalaOriginal[0] = efeitoHeatmap.transform.localScale;
+        // escalaOriginal[1] = efeitoHeatmapLaranja.transform.localScale;
+        // escalaOriginal[2] = efeitoHeatmapVermelho.transform.localScale;
 
-        //Cor e opacidade do Heatmap (tres tipos)
+        //Escala, cor e opacidade do Heatmap (tres tipos)
         for(int n=0; n<3; n++)
         {
-            _renderer[n] = e_H_novo[n].GetComponent<Renderer>(); //Só pega o verde por enquanto //
-            corOriginal[n] = _renderer[n].sharedMaterial.color;
-            corAnterior[n] = corOriginal[n];
-        }
-        //Descobrir como saber se houve entradas
-        if(true){corNova=corOriginal;}//Parametros de cor não especificados, assumimos o original
-        
-        opacidadeOriginal = opacidadeAnterior = corOriginal[0].a;
+            escalaOriginal[n] = e_H_novo[n].transform.localScale;
+            _renderer[n] = e_H_novo[n].GetComponent<Renderer>(); 
+            //corOriginal[n] = _renderer[n].sharedMaterial.color; //Referncia mesma cor, perde valores originais com modificacoes
 
+            float r, g, b, a;
+            r = _renderer[n].sharedMaterial.color.r;
+            g = _renderer[n].sharedMaterial.color.g;
+            b = _renderer[n].sharedMaterial.color.b;
+            a = _renderer[n].sharedMaterial.color.a;
+            corOriginal[n] = new Color(r,g,b,a);
+
+            if(aplicarCor){} //Novas cores ja escolhidas
+            else corNova[n] = new Color(r,g,b,a);
+            
+        }
+       
+        
+        //Opacidade
+        opacidadeOriginal = corOriginal[0].a;
+        if(opacidade==0) opacidade = opacidadeOriginal; //Assumindo que é por falta de entrada, para evitar apagar tudo com mudança de cor
+        opacidadeAnterior = opacidade;
 
         //Checando se o HMD esta funcionando corretamente e se pode ser usado
         if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
@@ -126,7 +143,12 @@ public class StoreViewpoints : MonoBehaviour
         //Inicia em segundo plano a rotina de captura de pontos
         if (EmExecucao && EmExecucao_background)
         {
-            StartCoroutine(storePoints());
+            //Co-rotina que aguarda um certo periodo de tempo e captura o ponto disponível (naive)
+            //StartCoroutine(storePoints());
+
+            //Rotina que analisa a uma taxa fixa os ultimos pontos para determinar fixação
+            StartCoroutine(dwellPoints());
+
         }
         //Para modo replay em tempo real
         else if (ModoPlayer!=ModoPlayer_anterior && ModoPlayer==true)
@@ -182,11 +204,11 @@ public class StoreViewpoints : MonoBehaviour
         }
 
         //Se houver mudança de cor ou opacidade
-        if (opacidade!=opacidadeAnterior || !corNova.Equals(corAnterior))
+        if (opacidade!=opacidadeAnterior || aplicarCor)
         {
             opacidadeAnterior = opacidade;
-            corAnterior = corNova;
-            mudarCorEOpacidade();
+            mudarCorEOpacidade();    
+            aplicarCor=false;        
         }
     
     }
@@ -204,41 +226,102 @@ public class StoreViewpoints : MonoBehaviour
 
         //Retornando as escalas corretas dos prefabs
         mudarEscala(1);
+        //Retornando opacidade e cor
+        for(int n=0; n<3; n++){ _renderer[n].sharedMaterial.color = corOriginal[n];}
+
     }
 
+    public IEnumerator dwellPoints()
+    {
+        //Pausa novas chamadas dessa rotina diretamente em Update()
+        EmExecucao_background = false;
 
+        Vector3 somaPontos = new Vector3(0,0,0);
+        Vector3 pontoAtual;
+
+        for(int n=0; n<10; n++)
+        {
+            //Escolha da camera
+            if (!HMD) //Caso nao esteja funcionando o headset
+            {
+                cam = Camera.main;//Camera prinicipal da cena
+                pontoAtual = capturaPonto(cam);//Captura do ponto de visao projetado no mundo
+            }
+            else pontoAtual = capturaPontoHMD();//para o HMD
+            
+            dwell_points[n] = pontoAtual;
+            somaPontos += pontoAtual;
+            //Debug.Log("Novo ponto achado");
+            //Espera para a próxima captura
+            yield return new WaitForSecondsRealtime(tempoParaUpdate/10);
+        }
+
+        Vector3 mediaPontos = somaPontos/10;
+        Vector3 pontoFinal = new Vector3(0,0,0);
+        bool proximos = true;
+        //float distanciaMaxima = 0.5f;
+        float menorDistancia = distanciaMaxima;
+        float distanciaAtual;
+
+        //Verifica a proximidade de todos os pontos, determinando se são proximos e qual deve ser o ponto final
+        for(int n=0; n<10 && proximos ; n++)
+        {
+            distanciaAtual = Vector3.Distance(mediaPontos, dwell_points[n]);
+            if(distanciaAtual < menorDistancia){
+                menorDistancia = distanciaAtual;
+                pontoFinal = dwell_points[n];
+            }
+            else if(distanciaAtual > distanciaMaxima){
+                    proximos = false;
+                    pontoFinal = Vector3.zero;
+                 }
+        }
+
+        //Considerando que todos estão dentro do limite de distancia do ponto média podemos adiciona-los
+        if(proximos){
+            pontoAtual = pontoFinal;
+            storePoints(pontoAnterior, pontoAtual);
+            //Debug.Log("Novo ponto criado");
+            pontoAnterior = pontoAtual;
+        }
+
+
+        //retoma a execução dessa rotina em Update()
+        EmExecucao_background = true;
+    }
 
     //Aquisição dos pontos de visao e armazenamento desses - com eventual impressao individual
-    public IEnumerator storePoints()
+    public void storePoints(Vector3 pontoAnterior, Vector3 pontoAtual)
     {
-        EmExecucao_background = false;//paralisa o update e continua o processo ao longo dos frames
-        //Debug.Log("Entrou em execucao");
-            //TO DO: dwell-time
-        //Espera um periodo predeterminado para executar novamente a captura
-        yield return new WaitForSecondsRealtime(tempoParaUpdate);
-        //Debug.Log("deve ter esperado o tempo até update");
+        // EmExecucao_background = false;//paralisa o update e continua o processo ao longo dos frames
+        // //Debug.Log("Entrou em execucao");
+        //     //TO DO: dwell-time
+        // //Espera um periodo predeterminado para executar novamente a captura
+        // yield return new WaitForSecondsRealtime(tempoParaUpdate);
+        // //Debug.Log("deve ter esperado o tempo até update");
 
-        //Escolha da camera
-        if (!HMD) //Caso nao esteja funcionando o headset
-        {
-            cam = Camera.main;//Camera prinicipal da cena
-            //Captura do ponto de visao projetado no mundo
-            pontoAtual = capturaPonto(cam);
-        }
-        else //para o HMD
-        {
-            pontoAtual = capturaPontoHMD();
-        }
+        // //Escolha da camera
+        // if (!HMD) //Caso nao esteja funcionando o headset
+        // {
+        //     cam = Camera.main;//Camera prinicipal da cena
+        //     //Captura do ponto de visao projetado no mundo
+        //     pontoAtual = capturaPonto(cam);
+        // }
+        // else //para o HMD
+        // {
+        //     pontoAtual = capturaPontoHMD();
+        // }
 
-        if (pontoAnterior.point == pontoAtual.point) { }//RaycastHit.ReferenceEquals(pontoAnterior,pontoAtual)) { }
+
+        if (pontoAnterior == pontoAtual) { }//RaycastHit.ReferenceEquals(pontoAnterior,pontoAtual)) { }
         else//se existir ponto ele sera armazenado
         {
             //Debug.Log("Ponto atual: " + pontoAtual.point);
             //Debug.Log("Ponto anterior: " + pontoAnterior.point);
             
             //Armazena pontos em formato Vector3 para construir o heatmap
-            pontos.Add(pontoAtual.point);
-            pontoAnterior = pontoAtual;
+            pontos.Add(pontoAtual);
+            //pontoAnterior = pontoAtual;
 
             //Rastro e atualizacao em tempo real
             if (somenteRastro)
@@ -248,22 +331,22 @@ public class StoreViewpoints : MonoBehaviour
                     //Apagar o ponto que foi dequeued
                     GameObject.Destroy(rastro.Dequeue());
                     //Coloca o novo ponto com enqueue
-                    rastro.Enqueue(imprimirPontoSimples(pontoAtual.point));
+                    rastro.Enqueue(imprimirPontoSimples(pontoAtual));
                 }
                 else //Aumenta a fila com o novo ponto
                 {
-                    rastro.Enqueue(imprimirPontoSimples(pontoAtual.point));
+                    rastro.Enqueue(imprimirPontoSimples(pontoAtual));
                 }
             }
             else if(updateEmTempoReal)//Para impressao em tempo real ativa
             {
-                imprimirPontoIndividualmente(pontoAtual.point);
+                imprimirPontoIndividualmente(pontoAtual);
             }
          
 
 
             //Salvar://Lista de InfoperSecond para o ItemEntry do BinaryManager //Atualmente com as infos de EyeT zeradas
-            infoHeatmap.Add(new InfoperSecond(Time.time, pontoAtual.point,
+            infoHeatmap.Add(new InfoperSecond(Time.time, pontoAtual,
                                         Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero));
         }
 
@@ -272,19 +355,19 @@ public class StoreViewpoints : MonoBehaviour
     }
 
 
-    private RaycastHit capturaPonto(Camera cam)
+    private Vector3 capturaPonto(Camera cam)
     {
         Ray raio = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
         Vector3 pontoVistoPelaCamera = cam.ScreenToWorldPoint(new Vector3(cam.scaledPixelWidth / 2, cam.scaledPixelHeight / 2, cam.nearClipPlane));//Deprecated?
         RaycastHit pontoNoMundo;
         if (Physics.Raycast(raio, out pontoNoMundo, 100.0f))//Distância arbitraria demais?
         {
-            return pontoNoMundo;
+            return pontoNoMundo.point;
         }
         else return pontoAnterior;
     }
 
-    private RaycastHit capturaPontoHMD()
+    private Vector3 capturaPontoHMD()
     {
         var gazeRay = TobiiXR.GetEyeTrackingData(TobiiXR_TrackingSpace.Local).GazeRay;
         if (TobiiXR.GetEyeTrackingData(TobiiXR_TrackingSpace.Local).GazeRay.IsValid)//Verfica a validade dos dados. Redundante com o raycast?
@@ -295,12 +378,13 @@ public class StoreViewpoints : MonoBehaviour
             RaycastHit pontoNoMundo;
             if (Physics.Raycast(raio, out pontoNoMundo, 100.0f))
             {
-                return pontoNoMundo;
+                return pontoNoMundo.point;
             }
             else return pontoAnterior;
         }
         else return pontoAnterior;
     }
+
 
     private void imprimirHeatmap()//Apaga o que esta impresso e imprime todos os pontos armazenados 
     {
@@ -486,21 +570,11 @@ public class StoreViewpoints : MonoBehaviour
 
     private void mudarCorEOpacidade()
     {
-        //e_H_novo.GetComponent<Texture3D>().SetPixel();
-        //struct gradiente_alpha = objeto_opacidade.GetComponent<GradientAlphaKey>;
-        //corNova = corOriginal;//CUIDADO AQUI, dependendo de como for implementado
-        //A cor pode ser alterada por mudanças dos canais RGB, porem necessitariamos de 3tiposx3canais de opções de escolha
-        //corNova[0].ToString//Verificar se funciona com o parametro vazio e o que tem de saida aqui
-        Debug.Log("ENTROU PARA ALTERAR COR E OPACIDADE");
-
         for(int n=0; n<3; n++)
         {
-            //corNova.r = ;
             corNova[n].a = opacidade;//Mudando o Alpha (Opacidade)
-            _renderer[n].sharedMaterial.SetColor("novaCor",corNova[n]);
-            //_renderer[n].material.SetColor("novaCor",corNova[n]);
+            _renderer[n].sharedMaterial.color = corNova[n];//Muda a cor diretamente no material
         }
-
     }
 
 
