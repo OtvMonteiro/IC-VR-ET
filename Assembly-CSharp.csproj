@@ -62,6 +62,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GettingStarted_ECS\LevelComponent.cs" />
+    <Compile Include="Assets\GettingStarted_ECS\LevelUpSystem.cs" />
+    <Compile Include="Assets\GettingStarted_ECS\MoveSpeedComponent.cs" />
+    <Compile Include="Assets\GettingStarted_ECS\MoverSystem.cs" />
+    <Compile Include="Assets\GettingStarted_ECS\Testing.cs" />
     <Compile Include="Assets\IC\GazeTrigger\GazeTriggerTeleport.cs" />
     <Compile Include="Assets\IC\Heatmap\BinaryManager.cs" />
     <Compile Include="Assets\IC\Heatmap\StoreViewpoints.cs" />
@@ -532,6 +537,15 @@
     <Reference Include="nunit.framework">
       <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/PackageCache/com.unity.burst@1.4.7/Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/PackageCache/com.unity.collections@0.9.0-preview.6/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0-preview/Runtime/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>A:/Program Files (x86)/Unity/2019.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
     </Reference>
@@ -969,6 +983,93 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.CacheServer">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/UnityEditor.CacheServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Jobs">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Jobs.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Jobs.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Jobs.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Entities.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties.UI">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Properties.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Serialization.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Serialization.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Properties.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Scenes.Hybrid">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Scenes.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Scenes.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Scenes.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Extensions">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Mathematics.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Searcher.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Searcher.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Extensions.Hybrid">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Mathematics.Extensions.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities.BuildUtils">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Entities.BuildUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Serialization">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities.Hybrid.EndToEnd.Tests">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Entities.Hybrid.EndToEnd.Tests.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities.Hybrid">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Entities.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Deformations">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Deformations.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties.UI.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Properties.UI.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Entities.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Transforms">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Transforms.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Transforms.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Transforms.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Transforms.Hybrid">
+      <HintPath>A:/Documents/GitHub/IC-ET-VR/Library/ScriptAssemblies/Unity.Transforms.Hybrid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

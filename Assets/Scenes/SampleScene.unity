@@ -960,7 +960,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 3.0122e-41, z: 0, w: -2.546875}
+  m_BoundingSphereOverride: {x: 0, y: 3.2673e-41, z: 0, w: 2.546875}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1050,22 +1050,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: 0.000000011920929
+      value: -0.0000009639734
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: 0
+      value: 3.72813
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: -0.10000002
+      value: 7.823085e+23
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 0
+      value: 3.7281308
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -1871,6 +1871,11 @@ PrefabInstance:
     - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
         type: 3}
       propertyPath: ModoPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,
+        type: 3}
+      propertyPath: showHeatmap
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5824808816961937345, guid: bc867dedd2580144d8a56621824ca7fc,

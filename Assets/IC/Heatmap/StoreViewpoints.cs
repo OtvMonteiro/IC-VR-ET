@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using ViveSR.anipal.Eye;
 using Tobii.XR;
+using Unity.Entities;
 
 
 //P.S. Os nomes de variaveis e metodos podem estar confusos> estao misturados termos em pt-br e eng.
@@ -42,7 +43,7 @@ public class StoreViewpoints : MonoBehaviour
     private bool HMD = false;
     private Camera cam;
 
-    [SerializeField]
+   
     //private RaycastHit pontoAtual, pontoAnterior;
     private Vector3 pontoAnterior = new Vector3(0,0,0);
 
@@ -58,8 +59,9 @@ public class StoreViewpoints : MonoBehaviour
 
 
     //Armazenando ObjetoParent, listas de pontos e seus objetos e uma fila para o rastro.
+    protected EntityManager entityManager = new EntityManager();
     protected List<Vector3> pontos = new List<Vector3>();
-    protected List<GameObject> objetosHeatmap = new List<GameObject>();
+    [SerializeField] protected List<GameObject> objetosHeatmap = new List<GameObject>();
     //protected List<GameObject> colliders = new List<GameObject>(); //Para encontrar objetos que foram destruidos por pouca utilidade
     protected Queue<GameObject> rastro = new Queue<GameObject>();
     protected Vector3[] dwell_points = new Vector3[10];
