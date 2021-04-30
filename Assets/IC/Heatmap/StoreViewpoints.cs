@@ -5,6 +5,15 @@ using System;
 using ViveSR.anipal.Eye;
 using Tobii.XR;
 using Unity.Entities;
+using Unity.Collections;
+using Unity.Transforms;
+using Unity.Mathematics; //p/ float3
+using Unity.Rendering;
+using Unity.Jobs;
+using UnityEngine.Jobs;
+
+
+
 
 
 //P.S. Os nomes de variaveis e metodos podem estar confusos> estao misturados termos em pt-br e eng.
@@ -37,6 +46,7 @@ public class StoreViewpoints : MonoBehaviour
     public Color[] corNova = new Color[3];//Verificar como o parametro aparece para o usuário
     public bool aplicarCor = false;
     public float opacidade;
+    [SerializeField] protected float proximidadeDeTemperatura;
 
 
     //Camera principal ou HMD
@@ -59,10 +69,16 @@ public class StoreViewpoints : MonoBehaviour
 
 
     //Armazenando ObjetoParent, listas de pontos e seus objetos e uma fila para o rastro.
-    protected EntityManager entityManager = new EntityManager();
+    protected EntityManager entityManager;
+    protected NativeArray<Entity> entityArray;
+    protected EntityArchetype heatmapArchetype;
     protected List<Vector3> pontos = new List<Vector3>();
+    protected List<int> colisoes = new List<int>();
+    protected int heatmapLayer;
+    [SerializeField] private Mesh heatmapMesh;
+    public Material[] heatmapMaterial = new Material[3];
+
     [SerializeField] protected List<GameObject> objetosHeatmap = new List<GameObject>();
-    //protected List<GameObject> colliders = new List<GameObject>(); //Para encontrar objetos que foram destruidos por pouca utilidade
     protected Queue<GameObject> rastro = new Queue<GameObject>();
     protected Vector3[] dwell_points = new Vector3[10];
 
@@ -79,63 +95,85 @@ public class StoreViewpoints : MonoBehaviour
 
     private void Start()
     {
-        objetoPai = gameObject; //Associa o objeto que contem o script
+    {//OLD
+        //     objetoPai = gameObject; //Associa o objeto que contem o script
         
-    //Criando objetos de heatmap modificaveis no contexto
-        //Vector3 pontoDistante = new Vector3(-100,-100,-100);
-        //Vector3 pontoDistante = Vector3.zero;
-        ////Cria um objeto base para outros
-        //e_H_novo[0] = efeitoHeatmap;
-        //Instantiate(efeitoHeatmap, pontoDistante,Quaternion.identity);
+    // //Criando objetos de heatmap modificaveis no contexto
+    //     //Vector3 pontoDistante = new Vector3(-100,-100,-100);
+    //     //Vector3 pontoDistante = Vector3.zero;
+    //     ////Cria um objeto base para outros
+    //     //e_H_novo[0] = efeitoHeatmap;
+    //     //Instantiate(efeitoHeatmap, pontoDistante,Quaternion.identity);
 
-        // e_H_novo[0] = GameObject.Instantiate(efeitoHeatmap        ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
-        // e_H_novo[1] = GameObject.Instantiate(efeitoHeatmapLaranja ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
-        // e_H_novo[2] = GameObject.Instantiate(efeitoHeatmapVermelho,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+    //     // e_H_novo[0] = GameObject.Instantiate(efeitoHeatmap        ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+    //     // e_H_novo[1] = GameObject.Instantiate(efeitoHeatmapLaranja ,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
+    //     // e_H_novo[2] = GameObject.Instantiate(efeitoHeatmapVermelho,pontoDistante, Quaternion.identity, objetoPai.transform) as GameObject; 
         
-        //Não serve para alterar cor, mas não é necessario instanciar pontos visíveis no inicio
-        e_H_novo[0] = efeitoHeatmap; 
-        e_H_novo[1] = efeitoHeatmapLaranja;
-        e_H_novo[2] = efeitoHeatmapVermelho;
+    //     //Não serve para alterar cor, mas não é necessario instanciar pontos visíveis no inicio
+    //     e_H_novo[0] = efeitoHeatmap; 
+    //     e_H_novo[1] = efeitoHeatmapLaranja;
+    //     e_H_novo[2] = efeitoHeatmapVermelho;
         
        
-        //Escala (testar for loop)
-        // escalaOriginal[0] = efeitoHeatmap.transform.localScale;
-        // escalaOriginal[1] = efeitoHeatmapLaranja.transform.localScale;
-        // escalaOriginal[2] = efeitoHeatmapVermelho.transform.localScale;
+    //     //Escala (testar for loop)
+    //     // escalaOriginal[0] = efeitoHeatmap.transform.localScale;
+    //     // escalaOriginal[1] = efeitoHeatmapLaranja.transform.localScale;
+    //     // escalaOriginal[2] = efeitoHeatmapVermelho.transform.localScale;
 
-        //Escala, cor e opacidade do Heatmap (tres tipos)
-        for(int n=0; n<3; n++)
-        {
-            escalaOriginal[n] = e_H_novo[n].transform.localScale;
-            _renderer[n] = e_H_novo[n].GetComponent<Renderer>(); 
-            //corOriginal[n] = _renderer[n].sharedMaterial.color; //Referncia mesma cor, perde valores originais com modificacoes
+    //     //Escala, cor e opacidade do Heatmap (tres tipos)
+    //     for(int n=0; n<3; n++)
+    //     {
+    //         escalaOriginal[n] = e_H_novo[n].transform.localScale;
+    //         _renderer[n] = e_H_novo[n].GetComponent<Renderer>(); 
+    //         //corOriginal[n] = _renderer[n].sharedMaterial.color; //Referncia mesma cor, perde valores originais com modificacoes
 
-            float r, g, b, a;
-            r = _renderer[n].sharedMaterial.color.r;
-            g = _renderer[n].sharedMaterial.color.g;
-            b = _renderer[n].sharedMaterial.color.b;
-            a = _renderer[n].sharedMaterial.color.a;
-            corOriginal[n] = new Color(r,g,b,a);
+    //         float r, g, b, a;
+    //         r = _renderer[n].sharedMaterial.color.r;
+    //         g = _renderer[n].sharedMaterial.color.g;
+    //         b = _renderer[n].sharedMaterial.color.b;
+    //         a = _renderer[n].sharedMaterial.color.a;
+    //         corOriginal[n] = new Color(r,g,b,a);
 
-            if(aplicarCor){} //Novas cores ja escolhidas
-            else corNova[n] = new Color(r,g,b,a);
+    //         if(aplicarCor){} //Novas cores ja escolhidas
+    //         else corNova[n] = new Color(r,g,b,a);
             
-        }
+    //     }
        
         
-        //Opacidade
-        opacidadeOriginal = corOriginal[0].a;
-        if(opacidade==0) opacidade = opacidadeOriginal; //Assumindo que é por falta de entrada, para evitar apagar tudo com mudança de cor
-        opacidadeAnterior = opacidade;
+    //     //Opacidade
+    //     opacidadeOriginal = corOriginal[0].a;
+    //     if(opacidade==0) opacidade = opacidadeOriginal; //Assumindo que é por falta de entrada, para evitar apagar tudo com mudança de cor
+    //     opacidadeAnterior = opacidade;
 
-        //Checando se o HMD esta funcionando corretamente e se pode ser usado
-        if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
-                 SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT)
-        {
-            HMD = false;
-        }
-        else HMD = true;
+    //     //Checando se o HMD esta funcionando corretamente e se pode ser usado
+    //     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
+    //              SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT)
+    //     {
+    //         HMD = false;
+    //     }
+    //     else HMD = true;
+    }
+        
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        //entityArray = new NativeArray<Entity>(10000,Allocator.Temp);
+        heatmapLayer = LayerMask.GetMask("Heatmap").GetHashCode();
 
+        heatmapArchetype = entityManager.CreateArchetype(
+            typeof(Translation),
+            typeof(Collider),
+            typeof(RenderMesh),
+            typeof(RenderBounds),
+            typeof(LocalToWorld),
+            typeof(Scale),
+            typeof(ClosePointsComponent)
+        );
+        //Debug.Log("criou arquetipo: "+heatmapArchetype.ToString());
+        
+        heatmapMesh.Optimize();//Serve para algo? Diminui o numero de triangulos?
+        // entityManager.CreateEntity(heatmapArchetype);//Cria uma entity para iniciar o array (necessario para a implementacao de StorePoints mais eficiente)
+        // entityArray = entityManager.GetAllEntities(Allocator.Persistent);
+        // pontos.Add(Vector3.zero);//Motivo em JobHandle (necessario iniciar com um comprimento>0)
+        // colisoes.Add(0);
     }
 
 
@@ -295,55 +333,78 @@ public class StoreViewpoints : MonoBehaviour
     //Aquisição dos pontos de visao e armazenamento desses - com eventual impressao individual
     public void storePoints(Vector3 pontoAnterior, Vector3 pontoAtual)
     {
-        // EmExecucao_background = false;//paralisa o update e continua o processo ao longo dos frames
-        // //Debug.Log("Entrou em execucao");
-        //     //TO DO: dwell-time
-        // //Espera um periodo predeterminado para executar novamente a captura
-        // yield return new WaitForSecondsRealtime(tempoParaUpdate);
-        // //Debug.Log("deve ter esperado o tempo até update");
-
-        // //Escolha da camera
-        // if (!HMD) //Caso nao esteja funcionando o headset
-        // {
-        //     cam = Camera.main;//Camera prinicipal da cena
-        //     //Captura do ponto de visao projetado no mundo
-        //     pontoAtual = capturaPonto(cam);
-        // }
-        // else //para o HMD
-        // {
-        //     pontoAtual = capturaPontoHMD();
-        // }
-
-
-        if (pontoAnterior == pontoAtual) { }//RaycastHit.ReferenceEquals(pontoAnterior,pontoAtual)) { }
+        
+        if (pontoAnterior == pontoAtual) { }
         else//se existir ponto ele sera armazenado
         {
-            //Debug.Log("Ponto atual: " + pontoAtual.point);
-            //Debug.Log("Ponto anterior: " + pontoAnterior.point);
-            
             //Armazena pontos em formato Vector3 para construir o heatmap
             pontos.Add(pontoAtual);
-            //pontoAnterior = pontoAtual;
+            pontoAnterior = pontoAtual;
+            colisoes.Add(0); 
 
-            //Rastro e atualizacao em tempo real
-            if (somenteRastro)
-            {
-                if (!(tamanhoDoRastro > rastro.Count))//Se não houver mais espaço na fila
-                {
-                    //Apagar o ponto que foi dequeued
-                    GameObject.Destroy(rastro.Dequeue());
-                    //Coloca o novo ponto com enqueue
-                    rastro.Enqueue(imprimirPontoSimples(pontoAtual));
-                }
-                else //Aumenta a fila com o novo ponto
-                {
-                    rastro.Enqueue(imprimirPontoSimples(pontoAtual));
-                }
-            }
-            else if(updateEmTempoReal)//Para impressao em tempo real ativa
-            {
-                imprimirPontoIndividualmente(pontoAtual);
-            }
+            //Cria nova entidade
+            Entity currentEntity = entityManager.CreateEntity(heatmapArchetype);
+            
+            NativeArray<Vector3> v_pontos= pontos.ToNativeArray<Vector3>(Allocator.TempJob);
+            NativeArray<int> _colisoes = colisoes.ToNativeArray<int>(Allocator.TempJob);
+
+            JobDistancia JobDistancia = new JobDistancia{
+                pontos = v_pontos, colisoes = _colisoes,
+                proximidade = proximidadeDeTemperatura
+            };
+            JobHandle jobHandleDistancia = JobDistancia.Schedule(v_pontos.Length, new JobHandle());
+
+            // //Completa e ativa a ultima entidade (anterior)
+            // entityArray = entityManager.GetAllEntities(Allocator.Persistent);
+            // Debug.Log("Lenght of the entityArray: "+entityArray.Length);
+            // //NativeArray<Entity> auxArray = entityArray.GetSubArray(entityArray.Length-1, 1);
+            // Entity ultimaEntidade = entityArray.GetSubArray(entityArray.Length-1, 1).ToArray()[0];
+
+            
+            entityManager.SetComponentData(currentEntity, new Translation{ Value = pontoAtual  });
+            entityManager.SetComponentData(currentEntity, new Scale{Value=0.1f*escalaRelativaDosPontos});
+
+            jobHandleDistancia.Complete();
+            //entityArray = entityManager.GetAllEntities(Allocator.Persistent);
+
+            //Retornar os valores da lista de colisoes já atualizados
+            colisoes.Clear();
+            int[] aux_colisoes = _colisoes.ToArray();    
+            for(int n=0; n<aux_colisoes.Length;n++){colisoes.Add(aux_colisoes[n]);}
+
+            //atualizarClosePoints(_colisoes);//Problema com o array de entidades
+            atualizarClosePoints(currentEntity, _colisoes);
+            atualizarCorDeEntidade(currentEntity);
+            //entityManager.SetEnabled(currentEntity, true);
+
+            v_pontos.Dispose();
+            _colisoes.Dispose();
+
+            //entityManager.SetComponentData(currentEntity, new Collider{});
+            //Criar um job para controlar a temperatura e alterar a cor la? Com adição do component RenderMesh só lá?
+            //MoveEntitiesFrom(out NativeArray<Entity>, EntityManager) pode ajudar
+
+
+            ////OLD GameObject
+            // //Rastro e atualizacao em tempo real
+            // if (somenteRastro)
+            // {
+            //     if (!(tamanhoDoRastro > rastro.Count))//Se não houver mais espaço na fila
+            //     {
+            //         //Apagar o ponto que foi dequeued
+            //         GameObject.Destroy(rastro.Dequeue());
+            //         //Coloca o novo ponto com enqueue
+            //         rastro.Enqueue(imprimirPontoSimples(pontoAtual));
+            //     }
+            //     else //Aumenta a fila com o novo ponto
+            //     {
+            //         rastro.Enqueue(imprimirPontoSimples(pontoAtual));
+            //     }
+            // }
+            // else if(updateEmTempoReal)//Para impressao em tempo real ativa
+            // {
+            //     imprimirPontoIndividualmente(pontoAtual);
+            // }
          
 
 
@@ -390,15 +451,34 @@ public class StoreViewpoints : MonoBehaviour
 
     private void imprimirHeatmap()//Apaga o que esta impresso e imprime todos os pontos armazenados 
     {
-        //Limpando os objetos ja impressos
-        apagarHeatmap();
+        // //Limpando os objetos ja impressos
+        // apagarHeatmap();
 
-        //Inicialmente so' imprime os pontos armazenados, sem considerar proximidade e temperatura
-        foreach (Vector3 ponto in pontos) {
-            imprimirPontoIndividualmente(ponto);
+        // //Inicialmente so' imprime os pontos armazenados, sem considerar proximidade e temperatura
+        // foreach (Vector3 ponto in pontos) {
+        //     imprimirPontoIndividualmente(ponto);
+        // }
+        foreach(Entity _entity in entityArray){
+            entityManager.SetEnabled(_entity, true);
         }
-       
+
     }
+
+
+    private void apagarHeatmap()
+    {
+        // foreach (GameObject objeto in objetosHeatmap) {
+        //     GameObject.Destroy(objeto);
+        // }
+        // //Para reinstanciar os objetos para replay em tempo real:
+        // indexPontos = indexTempos = 0;
+
+        foreach(Entity _entity in entityArray){
+            entityManager.SetEnabled(_entity, false);
+        }
+
+    }
+
 
     protected void imprimirPontoIndividualmente (Vector3 ponto)
     {
@@ -459,18 +539,6 @@ public class StoreViewpoints : MonoBehaviour
         GameObject pontoCriado = Instantiate(efeitoHeatmap, ponto, Quaternion.identity, objetoPai.transform);
         objetosHeatmap.Add(pontoCriado);
         return pontoCriado;
-    }
-
-
-
-    private void apagarHeatmap()
-    {
-        foreach (GameObject objeto in objetosHeatmap) {
-            GameObject.Destroy(objeto);
-        }
-        //Para reinstanciar os objetos para replay em tempo real:
-        indexPontos = indexTempos = 0;
-
     }
 
 
@@ -579,7 +647,79 @@ public class StoreViewpoints : MonoBehaviour
         }
     }
 
+    private void atualizarCorDeEntidade(Entity currentEntity)
+    {
+        int closePoints = entityManager.GetComponentData<ClosePointsComponent>(currentEntity).closePoints;
+        Material _heatmapMaterial;
+        //Debug.Log("closePoints : "+closePoints);
+        switch (closePoints)
+        {
+            case int n when (n >= 5 && n < 12):
+                _heatmapMaterial = heatmapMaterial[1];
+                break;
+            case int n when (n >= 12):
+                _heatmapMaterial = heatmapMaterial[2];
+                break;
+            default:
+                _heatmapMaterial = heatmapMaterial[0];
+                break;
+        }
+
+        entityManager.AddSharedComponentData(currentEntity, new RenderMesh{  mesh = heatmapMesh, material = _heatmapMaterial });
+    }
+    
+    // private void atualizarClosePoints(NativeArray<int> colisoes)
+    // {
+    //     Debug.Log("Entrou para atualizar closePoints");
+    //     Debug.Log("Comprimento do NativeArray colisoes="+colisoes.Length);
+    //     entityManager.SetComponentData(entityArray[0], new ClosePointsComponent{closePoints = colisoes[0]}); //Caso especial fora do loop
+    //     for(int n=0; n<colisoes.Length; n++){
+    //         Debug.Log("Colisoes para n="+n+" : "+colisoes[n]);
+    //         entityManager.SetComponentData(entityArray[n], new ClosePointsComponent{closePoints = colisoes[n]});
+    //         Debug.Log("Atualizaou closePoints em n="+n);
+    //     }
+    // }
+
+    private void atualizarClosePoints(Entity currentEntity, NativeArray<int> colisoes)
+    {
+        entityManager.SetComponentData(currentEntity, new ClosePointsComponent{closePoints = colisoes[colisoes.Length-1]});
+    }
 
 
 }
+
+public struct JobDistancia : IJobFor {
+    
+    public NativeArray<Vector3> pontos;
+    //public NativeArray<Entity> entities;
+    public NativeArray<int> colisoes;
+    [ReadOnly] public float proximidade;
+    
+
+    public void Execute(int index) {
+        
+        int n_pontos = pontos.Length;
+        Vector3 ult_ponto = pontos[n_pontos-1];
+        //colisoes[colisoes.Length-1] = 0;
+
+        //Update do ultimo ponto
+        for(int n=n_pontos-2; n>0 && index==n_pontos-1; n--){
+            float distancia = Vector3.Distance(ult_ponto, pontos[n]);
+            if(distancia<proximidade) colisoes[colisoes.Length-1]++;
+        }
+        
+
+        //Update dos demais pontos
+        // for(int n=index; n<n_pontos-1; n++){
+        //     float distancia = Vector3.Distance(pontos[index-1], pontos[n]);
+        //     if(distancia<proximidade) colisoes[index-1]++;
+        // }
+
+        //Debug.Log("colisoes detectadas: "+colisoes[colisoes.Length-1]);
+        
+    }
+
+}
+
+
 
