@@ -73,8 +73,10 @@
     <Compile Include="Assets\GettingStarted_ECS\Testing.cs" />
     <Compile Include="Assets\GettingStarted_Jobs\TestingJob.cs" />
     <Compile Include="Assets\IC\GazeTrigger\GazeTriggerTeleport.cs" />
+    <Compile Include="Assets\IC\Heatmap DOTS\heatmapDOTS.cs" />
     <Compile Include="Assets\IC\Heatmap\BinaryManager.cs" />
     <Compile Include="Assets\IC\Heatmap\ClosePointsComponent.cs" />
+    <Compile Include="Assets\IC\Heatmap\ClosePointsSystem.cs" />
     <Compile Include="Assets\IC\Heatmap\StoreViewpoints.cs" />
     <Compile Include="Assets\IC\Heatmap\TemperatureComponent.cs" />
     <Compile Include="Assets\IC\Heatmap\TemperatureSystem.cs" />
@@ -327,6 +329,7 @@
     <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
     <None Include="Assets\IC\Outros\heatmaps(AllanZ)\Heatmap.shader" />
     <None Include="Assets\DOTSComponentsAndSystems-master\ProjectSettings\ProjectVersion.txt" />
+    <None Include="Assets\IC\Heatmap\StoreViewpoints copy2.txt" />
     <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\Common.cginc" />
     <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\TAA.cginc" />
     <None Include="Assets\Tobii\DemoScenes\Shaders\Highlight\MobileBlur.shader" />
