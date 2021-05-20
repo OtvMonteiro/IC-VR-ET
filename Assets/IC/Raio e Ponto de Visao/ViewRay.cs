@@ -39,6 +39,7 @@ public class ViewRay : MonoBehaviour
         else
         {
             stateRay = !stateRay;
+            RaioDeVisao=RaioDeVisao_anterior;
            //Debugando
             //if (stateRay) { Debug.Log("Raio de Visão Ativado"); }
             //else { Debug.Log("Raio de Visão Desativado"); }
@@ -51,6 +52,7 @@ public class ViewRay : MonoBehaviour
         else
         {
             statePoint = !statePoint;
+            PontoDeVisao=PontoDeVisao_anterior;
             //Debugando
             //if (statePoint) { Debug.Log("Ponto da Visão Ativado"); }
             //else { Debug.Log("Ponto da Visão Desativado"); }

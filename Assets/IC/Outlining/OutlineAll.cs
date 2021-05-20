@@ -17,13 +17,13 @@ public class OutlineAll : MonoBehaviour//, IGazeFocusable
     private Shader original_shader;
     private Renderer _renderer;
     private float _gazeStickinessSeconds = 1f;
-    private GameObject focusedObject, previousObject;
+    private GameObject focusedObject, cloneObject;
     private RaycastHit pontoAnterior;
     
     void Start()
     {
-        original_shader = outline_shader;
-        previousObject = gameObject;
+        //original_shader = outline_shader;
+        //previousObject = gameObject;
         //_renderer = GetComponent<Renderer>();
         //original_shader = _renderer.material.shader; 
         //Debug.Log("Outliner iniciado");
@@ -38,14 +38,13 @@ public class OutlineAll : MonoBehaviour//, IGazeFocusable
         {
             //Debug.Log("Não achou o Framework SRanipal");
             pontoAnterior = capturaPonto(Camera.main);
-            if (GameObject.Equals(previousObject, pontoAnterior.collider.gameObject)) { }
+            if (GameObject.Equals(focusedObject, pontoAnterior.collider.gameObject) ||
+                GameObject.Equals(cloneObject, pontoAnterior.collider.gameObject)  ) { }
             else
             {
-                //Debug.Log("Entrou para modificar o shader");
-                RemoveOutline(previousObject);
                 //Changing objects
-                previousObject = pontoAnterior.collider.gameObject;
-                CriarOutline(previousObject);
+                focusedObject = pontoAnterior.collider.gameObject;
+                CreateOutlining(focusedObject);
             }
 
         }
@@ -65,46 +64,41 @@ public class OutlineAll : MonoBehaviour//, IGazeFocusable
         //Debug.Log("Um objeto esta sob foco");
         //_hasFocus = hasFocus;
         //StartOutlineAnimation(hasFocus);
-        if (hasFocus)
+        if (hasFocus && !GameObject.Equals(focusedObject, Tobii.Gaming.TobiiAPI.GetFocusedObject() ))
         {
-            previousObject = Tobii.Gaming.TobiiAPI.GetFocusedObject();
-            CriarOutline(previousObject);
+            focusedObject = Tobii.Gaming.TobiiAPI.GetFocusedObject();
+            CreateOutlining(focusedObject);
         }
         else {
-            RemoveOutline(previousObject);
+            RemoveOutline(cloneObject);
         }
     }
 
-    private void CriarOutline(GameObject focusedObject)
+    private void CreateOutlining(GameObject focusedObject)
     {
-        original_shader = focusedObject.GetComponent<Renderer>().material.shader;
+        //Guarantees that last one is removed from scene
+        RemoveOutline(cloneObject);
 
-        focusedObject.GetComponent<Renderer>().material.shader = outline_shader;
-
-
-        //original_shader = focusedObject.GetComponent<Shader>();
-        //Debug.Log("Shader original:  "+ original_shader.ToString());
-
-        //focusedObject.GetComponent<Shader>() = GetComponent<Shader>("Outline_shader");
-
-        // if(hasFocus){
-        //      _renderer.material.shader = outline_shader;
-        // }   
-        // else{ //Ineficiente, pois não considera se é realmente preciso executar laço
-        //     waitABit();
-        //     _renderer.material.shader = original_shader;
-        // }
-
-
-    }
-
-    private void RemoveOutline(GameObject previousObject)
-    {
-        if(previousObject.TryGetComponent<Renderer>(out _renderer))
-        {
-            _renderer.material.shader = original_shader;
-        }
+        //Creates a clone of the focused object
+        cloneObject = GameObject.Instantiate(focusedObject, focusedObject.transform.position,
+                                        focusedObject.transform.rotation, gameObject.transform) as GameObject;
         
+        // Alters slightly the scale to bring the clone to the front
+        cloneObject.transform.localScale = cloneObject.transform.localScale * 1.05f;
+        // Set the shader, for higlighting and outlining effect
+        if(cloneObject.TryGetComponent<Renderer>(out _renderer)){
+            _renderer.material.shader = outline_shader;
+        }
+        else{
+            _renderer = cloneObject.AddComponent<Renderer>();
+            _renderer.material.shader = outline_shader;
+        }
+
+    }
+
+    private void RemoveOutline(GameObject clone)
+    {
+        GameObject.Destroy(clone);
     }
 
     //Evitar flickering
@@ -121,9 +115,8 @@ public class OutlineAll : MonoBehaviour//, IGazeFocusable
     private RaycastHit capturaPonto(Camera cam)
     {
         Ray raio = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-        Vector3 pontoVistoPelaCamera = cam.ScreenToWorldPoint(new Vector3(cam.scaledPixelWidth / 2, cam.scaledPixelHeight / 2, cam.nearClipPlane));//Deprecated?
         RaycastHit pontoNoMundo;
-        if (Physics.Raycast(raio, out pontoNoMundo, 100.0f))//Distância arbitraria demais?
+        if (Physics.Raycast(raio, out pontoNoMundo, 100.0f))
         {
             return pontoNoMundo;
         }
