@@ -4764,10 +4764,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4048820113051179620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 537e3f47a548fd44095e3d57e189fa20, type: 3}
+  m_Script: {fileID: 11500000, guid: cd1d67a51cb68704bb9f17d4bce8c457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PontoDeVisao: 0
   RaioDeVisao: 0
-  indicadorDePonto: {fileID: 7850186275361387640, guid: 48f00e30e3ac5604db459095a01e21cb,
-    type: 3}
+  indicadorDePonto: {fileID: 0}
