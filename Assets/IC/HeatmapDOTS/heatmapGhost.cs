@@ -1,69 +1,111 @@
-﻿using System.Collections;
+﻿
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Collections;
+
+using heatmapDOTS;
+using System;
 
 public class heatmapGhost : MonoBehaviour
 {
     [SerializeField] public bool EnableGhost = false;
-    [SerializeField] public Material ghostMaterial;
     [SerializeField] private int originalFrequency = 40;
 
     [SerializeField] private float scale = 0.1f;
+    //[SerializeField] public Material ghostMaterial;
+    public List<Vector3> positions;
     private GameObject ghost;
+    private bool last_EnableGhost;
     private bool background_update = true;
-
     private EntityManager entityManager;
+    protected int indexPositions;
 
     
 
     void Start()
     {
-        ghost = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere)) as GameObject;
+        //Creates and sets the ghost indicator
+        GameObject ghost_model = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        ghost = GameObject.Instantiate(ghost_model,Vector3.zero,Quaternion.identity, gameObject.transform); //as GameObject;
+        GameObject.Destroy(ghost_model);
         ghost.transform.localScale = new Vector3(scale, scale, scale);
         ghost.SetActive(false);
+
+        last_EnableGhost = false;
+        indexPositions = 1;
+        //Get the entity manager
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
 
     
     
     void Update()
     {
-        ghost.SetActive(EnableGhost);
         
+        if(EnableGhost!=last_EnableGhost){
+            last_EnableGhost = EnableGhost;
+            
+            ghost.SetActive(EnableGhost);
+            
+            if(EnableGhost) {
+                getPositions();
+            }
+            else{//reset counters and list
+            positions.Clear();
+            indexPositions = 1;
+            }
+            
+            
+            
+        }
         
+
         if (EnableGhost && background_update)
         {
-            ghost.SetActive(true);
-            Debug.Log("Trying to move ghost");
-            moveGhost();
-            
+            StartCoroutine(moveGhost());  
         }
 
     }
 
-    public IEnumerator moveGhost(){
-        background_update = false;
-
-        
-        Entity[] aux_entities = entityManager.GetAllEntities().ToArray();
-        for(int n=2; n<aux_entities.Length ; n++)
+    public void getPositions(){
+       
+        Entity[] all_entities = entityManager.GetAllEntities(Unity.Collections.Allocator.Temp).ToArray();
+        foreach (Entity entity in all_entities)
         {
-            float3 translation = entityManager.GetComponentData<Translation>(aux_entities[n]).Value;
-            Debug.Log("Atualizando a posição do ghost: "+translation.x+"; "+translation.y+"; "+translation.z+"; ");
-            ghost.transform.position = new Vector3(translation.x, translation.y, translation.z);
-
-            yield return new WaitForSecondsRealtime(1/(originalFrequency));
-
-
-            //yield return new WaitForSecondsRealtime(1/(originalFrequency*2));
-
-
+            //Try-finally to get the heatmapidentifier and then the translation
+            bool found = true;
+            try
+            {
+                entityManager.GetComponentData<heatmapIdentifier>(entity);
+            }
+            catch (ArgumentException)
+            {
+                Debug.Log("Exception: entity not from heatmap");
+                found = false;
+            }
+            
+            if(found) positions.Add(entityManager.GetComponentData<Translation>(entity).Value);
         }
+    }
 
-
+    private IEnumerator moveGhost(){
+        background_update = false;
+        
+        if(indexPositions<positions.Count){  
+            Vector3 pos = positions.GetRange(indexPositions, 1).ToArray()[0];
+            ghost.transform.position = pos;
+            //Debug.Log("Moved ghost to:"+pos.x+"; "+pos.y+"; "+pos.z+"; ");
+        }
+                
+        indexPositions++;
+        yield return new WaitForSecondsRealtime(1/(originalFrequency));
         background_update = true;
+
     }
 
 

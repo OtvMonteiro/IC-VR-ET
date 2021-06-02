@@ -955,7 +955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1182358396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -969,9 +969,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableGhost: 0
+  originalFrequency: 10
+  scale: 0.2
   ghostMaterial: {fileID: 2100000, guid: 3471bb6e04ab6c247b43857bbbb8bbdb, type: 2}
-  originalFrequency: 40
-  scale: 0.1
+  positions: []
 --- !u!4 &1182358397
 Transform:
   m_ObjectHideFlags: 0
@@ -1337,7 +1338,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: -710.1006, z: 9.42e-43, w: -462.12256}
+  m_BoundingSphereOverride: {x: 0, y: 1.6502e-41, z: 0, w: 576}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1427,7 +1428,7 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: 1e-45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
@@ -1437,12 +1438,12 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 0
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 0
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
