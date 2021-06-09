@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 0cf44193605e8ff42b6943f35f4f0eef
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - heatmapCubePrefab: {fileID: 602566649152325443, guid: 71f61116b3f7a924b9bdc6780a760077,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
