@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 5824808816961937347}
   - component: {fileID: 5824808816961937345}
   m_Layer: 9
-  m_Name: Heatmap
+  m_Name: HeatmapHybrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5824808816961937347
 Transform:
   m_ObjectHideFlags: 0
@@ -45,10 +45,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EmExecucao: 1
   showHeatmap: 0
-  updateEmTempoReal: 0
+  updateEmTempoReal: 1
   somenteRastro: 0
   tamanhoDoRastro: 10
-  tempoParaUpdate: 0.2
+  tempoParaUpdate: 0.4
+  distanciaMaxima: 0.3
   escalaRelativaDosPontos: 1
   efeitoHeatmap: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
     type: 3}
@@ -64,4 +65,12 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
+  aplicarCor: 0
   opacidade: 0
+  proximidadeDeTemperatura: 0.2
+  heatmapMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  heatmapMaterial:
+  - {fileID: 2100000, guid: acd25d2ca46807246a11d53c262aa414, type: 2}
+  - {fileID: 2100000, guid: 424e82f9aaa7654428d31bd8e440ac82, type: 2}
+  - {fileID: 2100000, guid: 3e9dea40bfe0d864ebfbb91f87f61306, type: 2}
+  objetosHeatmap: []

@@ -40,6 +40,7 @@
      <Compile Include="Assets\DOTSComponentsAndSystems-master\Assets\Scripts\Data\WaveData.cs" />
      <Compile Include="Assets\DOTSComponentsAndSystems-master\Assets\Scripts\Spawner.cs" />
      <Compile Include="Assets\DOTSComponentsAndSystems-master\Assets\Scripts\Systems\WaveSystem.cs" />
+     <Compile Include="Assets\ETTools\AOI\AOI.cs" />
      <Compile Include="Assets\ETTools\GazeTrigger\GazeTriggerTeleport.cs" />
      <Compile Include="Assets\ETTools\HeatmapDOTS\heatmapColorizer.cs" />
      <Compile Include="Assets\ETTools\HeatmapDOTS\heatmapDOTS.cs" />

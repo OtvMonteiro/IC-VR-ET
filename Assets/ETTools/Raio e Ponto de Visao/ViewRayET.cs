@@ -89,26 +89,25 @@ namespace ViveSR.anipal.Eye
             if (!stateRay && !statePoint) {  }
             else
             {
-                //Cria um raio saindo do usuario e o ponto no mundo referente ao olhar
-                Ray raio = RaioOlhar();
-                //Atualmente pega a camera principal como origem
+                Ray _ray = GetGazeRay();
+                //Cam as starting point (better to use the HMD position)
                 Camera _cam = getCam();
-                 Vector3 pontoVistoPelaCamera = _cam.ScreenToWorldPoint(new Vector3(_cam.scaledPixelWidth / 2, _cam.scaledPixelHeight / 2, _cam.nearClipPlane));
-                RaycastHit pontoNoMundo;
+                Vector3 pointInScreen = _cam.ScreenToWorldPoint(new Vector3(_cam.scaledPixelWidth / 2, _cam.scaledPixelHeight / 2, _cam.nearClipPlane));
+                RaycastHit worldPoint;
 
-                //Faz um raycast
-                bool Colidiu = Physics.Raycast(raio, out pontoNoMundo, 100.0f);
+                //Raycast
+                bool Colidiu = Physics.Raycast(_ray, out worldPoint, 100.0f);
                 
                 //desenha o raio caso haja colisao
                 if (Colidiu && stateRay)
                 {
-                    Debug.DrawLine(pontoVistoPelaCamera, pontoNoMundo.point, Color.cyan, 0.03f);
+                    Debug.DrawLine(pointInScreen, worldPoint.point, Color.cyan, 0.03f);
                 }
                 
                 //Cria o ponto com o sistema de particulas
                 if (Colidiu && statePoint)
                 {
-                    showPoint(pontoNoMundo.point);
+                    showPoint(worldPoint.point);
                     
                 }
                 else hidePoint();//Garantindo que a particula pare
@@ -128,7 +127,7 @@ namespace ViveSR.anipal.Eye
         }
 
 
-        private Ray RaioOlhar()
+        private Ray GetGazeRay()
         {
             Camera _cam = getCam();
                     
@@ -139,6 +138,7 @@ namespace ViveSR.anipal.Eye
             } 
 
 
+            //Captura os dados de ET (refresh rate maior)
             if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
             {
                 SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
@@ -151,15 +151,15 @@ namespace ViveSR.anipal.Eye
             }
             else { return _cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0)); }
 
+            //Analisa a prioridade dos dados e envia como retorno um GazeRay caso esteja com foco
             foreach (GazeIndex index in GazePriority)
             {
                 Ray GazeRay;
-                int dart_board_layer_id = LayerMask.NameToLayer("NoReflection");
                 bool eye_focus;
                 if (eye_callback_registered)
-                    eye_focus = SRanipal_Eye_v2.Focus(index, out GazeRay, out FocusInfo, 0, MaxDistance, (1 << dart_board_layer_id), eyeData);
+                    eye_focus = SRanipal_Eye_v2.Focus(index, out GazeRay, out FocusInfo, 0, MaxDistance, eyeData);
                 else
-                    eye_focus = SRanipal_Eye_v2.Focus(index, out GazeRay, out FocusInfo, 0, MaxDistance, (1 << dart_board_layer_id));
+                    eye_focus = SRanipal_Eye_v2.Focus(index, out GazeRay, out FocusInfo, 0, MaxDistance);
 
                 if (eye_focus)
                 {

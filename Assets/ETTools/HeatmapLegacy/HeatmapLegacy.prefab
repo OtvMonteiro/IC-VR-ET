@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 5824808816961937347}
   - component: {fileID: 5824808816961937345}
   m_Layer: 9
-  m_Name: Heatmap
+  m_Name: HeatmapLegacy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5824808816961937347
 Transform:
   m_ObjectHideFlags: 0
@@ -67,4 +67,10 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 0}
   aplicarCor: 0
   opacidade: 0
-  pontoAnterior: {x: 0, y: 0, z: 0}
+  proximidadeDeTemperatura: 0
+  heatmapMesh: {fileID: 0}
+  heatmapMaterial:
+  - {fileID: 2100000, guid: f853b8b36964e8d429d143a1ee27a992, type: 2}
+  - {fileID: 2100000, guid: cd1825148f93dc8408bd629da6486e81, type: 2}
+  - {fileID: 2100000, guid: 522aecb3c6a14a443b7f5cc5f28da1eb, type: 2}
+  objetosHeatmap: []

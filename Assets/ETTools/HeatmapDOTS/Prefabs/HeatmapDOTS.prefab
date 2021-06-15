@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Colorize: 0
-  distance: 0.5
+  distance: 0.2
   mat_default: {fileID: 2100000, guid: 767f995d75b988d418ffef0a6174b58d, type: 2}
   mat_tmp1: {fileID: 2100000, guid: 6deb4984bcb065542ba8066a2260ff40, type: 2}
   mat_tmp2: {fileID: 2100000, guid: da71a4de3a219764caea635946ade34a, type: 2}
