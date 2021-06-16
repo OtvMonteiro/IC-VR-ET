@@ -975,7 +975,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 4.0436e-41, z: 0, w: -636}
+  m_BoundingSphereOverride: {x: 0, y: 4e-45, z: 1.1862e-41, w: 1.04e-43}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1065,22 +1065,22 @@ PrefabInstance:
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: -4.0386633e-15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: NaN
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 1.04e-43
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 108762345594134268, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 0
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
@@ -1225,7 +1225,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1828431902}
   m_LocalRotation: {x: 0.030783536, y: -0, z: -0, w: 0.9995261}
-  m_LocalPosition: {x: 4.57, y: -0.91425544, z: 2.33}
+  m_LocalPosition: {x: 4.57, y: -1.07, z: 2.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1694305203}
@@ -1630,6 +1630,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: heatmapGhost
       objectReference: {fileID: 0}
+    - target: {fileID: 339669634123145095, guid: 4ea232ad4fe70684f884ac0191fa39dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ea232ad4fe70684f884ac0191fa39dc, type: 3}
 --- !u!1001 &4048820112932684739
@@ -1731,7 +1736,7 @@ PrefabInstance:
     - target: {fileID: 5006796391317223718, guid: ba923489b41553d42971e74c155949e5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5195351
+      value: 2.202
       objectReference: {fileID: 0}
     - target: {fileID: 5006796391317223718, guid: ba923489b41553d42971e74c155949e5,
         type: 3}
@@ -1773,10 +1778,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5006796391317223722, guid: ba923489b41553d42971e74c155949e5,
+        type: 3}
+      propertyPath: pill
+      value: 
+      objectReference: {fileID: 3060264746421253688, guid: a1b250d5340b28245834f560c57a9d25,
+        type: 3}
     - target: {fileID: 5006796391317223725, guid: ba923489b41553d42971e74c155949e5,
         type: 3}
       propertyPath: m_Name
-      value: Cylinder (teleport)
+      value: GazeTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006796391317223725, guid: ba923489b41553d42971e74c155949e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba923489b41553d42971e74c155949e5, type: 3}
@@ -1846,6 +1862,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HeatmapDOTS
+      objectReference: {fileID: 0}
+    - target: {fileID: 5251152688238255888, guid: 22f2327740ca6b94384097327ed0b189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22f2327740ca6b94384097327ed0b189, type: 3}
@@ -2182,6 +2203,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1079945236}
     m_Modifications:
+    - target: {fileID: 7505513378339440360, guid: b5dc78e802f670147ab40cb25404eb45,
+        type: 3}
+      propertyPath: active
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7505513378339440361, guid: b5dc78e802f670147ab40cb25404eb45,
         type: 3}
       propertyPath: m_RootOrder
@@ -2241,6 +2267,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AOIs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7505513378339440362, guid: b5dc78e802f670147ab40cb25404eb45,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5dc78e802f670147ab40cb25404eb45, type: 3}

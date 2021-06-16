@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5006796391317223718}
   - component: {fileID: 5006796391317223721}
+  - component: {fileID: 1636887961192297989}
   - component: {fileID: 5006796391317223720}
-  - component: {fileID: 5006796391317223723}
   - component: {fileID: 5006796391317223722}
   m_Layer: 0
   m_Name: Cylinder (teleport)
@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5006796391317223718
 Transform:
   m_ObjectHideFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5006796391317223725}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.4175663, y: 1.5195351, z: 0.94197774}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -41,6 +41,20 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5006796391317223725}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!64 &1636887961192297989
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5006796391317223725}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &5006796391317223720
 MeshRenderer:
@@ -81,20 +95,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &5006796391317223723
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5006796391317223725}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!114 &5006796391317223722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,7 +104,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 5006796391317223725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a14840733f74ab842b3749280f65e19d, type: 3}
+  m_Script: {fileID: 11500000, guid: d0df861fdc8b58649a2a7ac33cd5530c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanciaMinima: 5
+  activationRadius: 2
+  pill: {fileID: 0}

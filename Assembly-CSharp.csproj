@@ -41,7 +41,7 @@
      <Compile Include="Assets\DOTSComponentsAndSystems-master\Assets\Scripts\Spawner.cs" />
      <Compile Include="Assets\DOTSComponentsAndSystems-master\Assets\Scripts\Systems\WaveSystem.cs" />
      <Compile Include="Assets\ETTools\AOI\AOI.cs" />
-     <Compile Include="Assets\ETTools\GazeTrigger\GazeTriggerTeleport.cs" />
+     <Compile Include="Assets\ETTools\GazeTrigger\GazeTrigger.cs" />
      <Compile Include="Assets\ETTools\HeatmapDOTS\heatmapColorizer.cs" />
      <Compile Include="Assets\ETTools\HeatmapDOTS\heatmapDOTS.cs" />
      <Compile Include="Assets\ETTools\HeatmapDOTS\heatmapGhost.cs" />
@@ -305,11 +305,9 @@
      <None Include="Assets\ETTools\Raio e Ponto de Visao\[Deprecated]ViewRay - EyeT.cs.txt" />
      <None Include="Assets\TobiiXR\Examples\HandEyeCoordination_Example\Shaders\UltimateOutline.shader" />
      <None Include="Assets\Tobii\DemoScenes\Readme-DemoSceneSetup.txt" />
-     <None Include="Assets\ETTools\GazeTrigger\IGazeFocusable.cs.meta.txt" />
      <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\ScreenSpaceRaytrace.cginc" />
      <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\Bloom.cginc" />
      <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\Uber.shader" />
-     <None Include="Assets\ETTools\GazeTrigger\IGazeFocusable.cs.txt" />
      <None Include="Assets\Tobii\DemoScenes\Shaders\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
      <None Include="Assets\ETTools\Outros\heatmaps(AllanZ)\Heatmap.shader" />
      <None Include="Assets\DOTSComponentsAndSystems-master\ProjectSettings\ProjectVersion.txt" />
