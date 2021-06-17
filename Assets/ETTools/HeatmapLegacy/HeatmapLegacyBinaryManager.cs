@@ -62,16 +62,16 @@ public static class HeatmapLegacyBinaryManager {
 	}
     
 
-    public static List<InfoperSecond> LoadInfo (string path) {
+    public static List<InfoperSecondHeatmap> LoadInfo (string path) {
 		if (File.Exists(path)) {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream stream = new FileStream (path, FileMode.Open);
 
 			PlayerData[] user = bf.Deserialize (stream) as PlayerData[];
-			List<InfoperSecond> infos = new List<InfoperSecond> ();
+			List<InfoperSecondHeatmap> infos = new List<InfoperSecondHeatmap> ();
 
 			for (int i = 0; i < user.Length; i++) {
-				infos.Add (new InfoperSecond (user [i]));
+				infos.Add (new InfoperSecondHeatmap (user [i]));
 			}
 
 
@@ -81,7 +81,7 @@ public static class HeatmapLegacyBinaryManager {
 			return infos;
 
 		} else {
-			return new List<InfoperSecond>();
+			return new List<InfoperSecondHeatmap>();
 		}
 	}
 
@@ -91,10 +91,10 @@ public static class HeatmapLegacyBinaryManager {
 			FileStream stream = new FileStream (path, FileMode.Open);
 
 			PlayerData[] user = bf.Deserialize (stream) as PlayerData[];
-			List<InfoperSecond> infos = new List<InfoperSecond> ();
+			List<InfoperSecondHeatmap> infos = new List<InfoperSecondHeatmap> ();
 
 			for (int i = 0; i < user.Length; i++) {
-				infos.Add (new InfoperSecond (user [i]));
+				infos.Add (new InfoperSecondHeatmap (user [i]));
 			}
 
 			ItemEntry data = new ItemEntry (user [0].name, infos);
@@ -136,7 +136,7 @@ public class PlayerData {
     public PlayerData() {
 	}
 
-	public PlayerData (InfoperSecond infos) {
+	public PlayerData (InfoperSecondHeatmap infos) {
 
 
         heatmapPoint = new float[3];
@@ -190,7 +190,7 @@ public class PlayerData {
 }
 
 //classes usadas para gravar em tempo real, com definições do Unity de alto nível
-public class InfoperSecond {
+public class InfoperSecondHeatmap {
 
 
     public Vector3 heatmapPoint;
@@ -209,10 +209,10 @@ public class InfoperSecond {
 
 
 	//necessario para o serializer
-	public InfoperSecond() {
+	public InfoperSecondHeatmap() {
 	}
 
-    public InfoperSecond (PlayerData data) {
+    public InfoperSecondHeatmap (PlayerData data) {
 
 
         heatmapPoint.x = data.heatmapPoint[0];
@@ -252,7 +252,7 @@ public class InfoperSecond {
         time = data.time;
 	}
 
-    public InfoperSecond(float tempo, Vector3 pontoHeatmap,
+    public InfoperSecondHeatmap(float tempo, Vector3 pontoHeatmap,
        Vector3 posicaoOlhosCombinados, Vector3 direcaoOlhosCombinados, Vector3 direcaoOlhoEsquerdo, Vector3 posicaoOlhoEsquerdo,
        Vector3 direcaoOlhoDireito, Vector3 posicaoOlhoDireito)
     {
@@ -286,7 +286,7 @@ public class ItemEntry {
 
 
 
-    public List<InfoperSecond> infos = new List<InfoperSecond> ();
+    public List<InfoperSecondHeatmap> infos = new List<InfoperSecondHeatmap> ();
 
 	//necessario para o serializer
 	public ItemEntry () {
@@ -308,7 +308,7 @@ public class ItemEntry {
 
     //}
 
-    public ItemEntry(string nome, List<InfoperSecond> informacoes)
+    public ItemEntry(string nome, List<InfoperSecondHeatmap> informacoes)
     {
         name = nome;
         infos = informacoes;

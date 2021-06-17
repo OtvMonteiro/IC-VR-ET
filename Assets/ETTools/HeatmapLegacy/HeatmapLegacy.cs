@@ -68,7 +68,7 @@ public class HeatmapLegacy : MonoBehaviour
 
     //Usando o BinaryManager para guardar os dados
     private ItemEntry user;
-    private List<InfoperSecond> infoHeatmap = new List<InfoperSecond>();
+    private List<InfoperSecondHeatmap> infoHeatmap = new List<InfoperSecondHeatmap>();
     protected List<float> tempos = new List<float>();//Para sincronizar tempo do player com o arquivo de replay
     //Auxiliares para replay
     protected int indexPontos=0 , indexTempos=0;
@@ -345,8 +345,8 @@ public class HeatmapLegacy : MonoBehaviour
          
 
 
-            //Salvar://Lista de InfoperSecond para o ItemEntry do BinaryManager //Atualmente com as infos de EyeT zeradas
-            infoHeatmap.Add(new InfoperSecond(Time.time, pontoAtual,
+            //Salvar://Lista de InfoperSecondHeatmap para o ItemEntry do BinaryManager //Atualmente com as infos de EyeT zeradas
+            infoHeatmap.Add(new InfoperSecondHeatmap(Time.time, pontoAtual,
                                         Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero));
         }
 
@@ -522,7 +522,7 @@ public class HeatmapLegacy : MonoBehaviour
         pontos.Clear();
         tempos.Clear();
 
-        foreach (InfoperSecond informacao in infoHeatmap)
+        foreach (InfoperSecondHeatmap informacao in infoHeatmap)
         {
             pontos.Add(informacao.heatmapPoint);
             tempos.Add(informacao.time);

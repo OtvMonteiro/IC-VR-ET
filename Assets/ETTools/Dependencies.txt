@@ -1,0 +1,9 @@
+DOTS packages:
+        - Entities
+        - Jobs
+        - Burst
+        - Hybrid Renderer
+VR+ET packages:
+        - SRanipal
+        - TobiiXRSDK
+        - Tobii SDK

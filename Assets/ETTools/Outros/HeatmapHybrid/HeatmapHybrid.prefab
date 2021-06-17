@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5824808816961937349
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5824808816961937347}
+  - component: {fileID: 5824808816961937345}
+  m_Layer: 9
+  m_Name: HeatmapHybrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 0
+--- !u!4 &5824808816961937347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5824808816961937349}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.592, y: 0.215, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5824808816961937345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5824808816961937349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fd8ef48cffee04439e297bd1dac4751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EmExecucao: 1
+  showHeatmap: 0
+  updateEmTempoReal: 1
+  somenteRastro: 0
+  tamanhoDoRastro: 10
+  tempoParaUpdate: 0.4
+  distanciaMaxima: 0.3
+  escalaRelativaDosPontos: 1
+  efeitoHeatmap: {fileID: 2678476836059319952, guid: 37bb5623bdb8d1e47923e4741eb50b8a,
+    type: 3}
+  efeitoHeatmapLaranja: {fileID: 7775086429765991711, guid: c00c97d9935eff04497759ee16c6d6ff,
+    type: 3}
+  efeitoHeatmapVermelho: {fileID: 1734858818982088343, guid: cbc0688fbed94344abf6acbdf54f5895,
+    type: 3}
+  colisor: {fileID: 1734858818982088343, guid: cd5c05fe321527346a21b0437fd8b49a, type: 3}
+  salvarHeatmap: 0
+  ModoPlayer: 0
+  CaminhoDoArquivoDeReplay: C:\Users\Otv\Desktop\ET Gravacoes\heatmap__22_02_2021__14_59_48.txt
+  corNova:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  aplicarCor: 0
+  opacidade: 0
+  proximidadeDeTemperatura: 0.2
+  heatmapMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  heatmapMaterial:
+  - {fileID: 2100000, guid: acd25d2ca46807246a11d53c262aa414, type: 2}
+  - {fileID: 2100000, guid: 424e82f9aaa7654428d31bd8e440ac82, type: 2}
+  - {fileID: 2100000, guid: 3e9dea40bfe0d864ebfbb91f87f61306, type: 2}
+  objetosHeatmap: []
